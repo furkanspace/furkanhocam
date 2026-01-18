@@ -928,3 +928,258 @@ button:disabled {
 .btn-finish:hover {
     background: rgba(255, 255, 255, 0.2);
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    /* Global */
+    #root>div {
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .glass-panel {
+        border-radius: 15px;
+    }
+
+    /* Setup Page */
+    .setup-page {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .setup-container {
+        padding: 1.5rem;
+        gap: 1.5rem;
+    }
+
+    .setup-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .team-list {
+        grid-template-columns: 1fr;
+    }
+
+    .mode-selection {
+        flex-direction: column;
+    }
+
+    .mode-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-start {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+
+    /* Active Tournaments */
+    .active-tournaments {
+        padding: 1.5rem;
+    }
+
+    .tournament-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .tournament-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    /* Dashboard */
+    .dashboard-container {
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        width: 100%;
+    }
+
+    .btn-home {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tab-controls {
+        width: 100%;
+    }
+
+    .tab-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .content-area {
+        padding: 1rem;
+    }
+
+    /* Fixtures */
+    .fixture-card {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0.8rem;
+        text-align: center;
+    }
+
+    .team-home,
+    .team-away {
+        text-align: center;
+        font-size: 1.1rem;
+    }
+
+    .match-status {
+        padding: 0.5rem 0;
+        min-width: auto;
+    }
+
+    .score-with-edit {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .edit-score-inline {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Standings Table */
+    .standings-table {
+        font-size: 0.85rem;
+    }
+
+    .standings-table th,
+    .standings-table td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    /* Match View */
+    .match-container {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .scoreboard {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+        padding-top: 4rem;
+    }
+
+    .team-column {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .team-label {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+    }
+
+    .team-title {
+        font-size: 1.8rem;
+    }
+
+    .score-display {
+        font-size: 4rem;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .score-controls {
+        gap: 0.8rem;
+    }
+
+    .btn-control {
+        width: 45px;
+        height: 45px;
+    }
+
+    .card-row {
+        gap: 0.8rem;
+    }
+
+    .card-display {
+        width: 35px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+
+    .btn-card-sm {
+        width: 24px;
+        height: 24px;
+        font-size: 0.9rem;
+    }
+
+    .vs-divider {
+        font-size: 1.5rem;
+    }
+
+    .match-footer {
+        padding: 1rem;
+    }
+
+    .btn-finish {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .modal-content h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .setup-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .score-display {
+        font-size: 3rem;
+    }
+
+    .team-title {
+        font-size: 1.5rem;
+    }
+
+    .standings-table {
+        font-size: 0.75rem;
+    }
+
+    .standings-table th,
+    .standings-table td {
+        padding: 0.5rem 0.2rem;
+    }
+}
