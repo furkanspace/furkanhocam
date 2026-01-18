@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
-import { Calendar, TrendingUp, Home } from 'lucide-react';
+import { Calendar, TrendingUp, Home, Edit2, Check, X, Lock } from 'lucide-react';
 
-const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome }) => {
-    const [activeTab, setActiveTab] = useState('FIXTURES'); // FIXTURES, STANDINGS
+const ADMIN_PASSWORD = 'halilhoca...com';
+
+const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onUpdateResult }) => {
+    const [activeTab, setActiveTab] = useState('FIXTURES');
+    const [editingMatch, setEditingMatch] = useState(null);
+    const [editScores, setEditScores] = useState({ home: 0, away: 0 });
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [pendingEditMatch, setPendingEditMatch] = useState(null);
+    const [passwordInput, setPasswordInput] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const getStandings = () => {
         const stats = {};
@@ -44,12 +53,79 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome }) =
     };
 
     const standings = getStandings();
-
-    // Filter out BYE matches from display
     const displayFixtures = fixtures.filter(f => f.away !== 'BYE');
+
+    const handleEditClick = (match) => {
+        if (isAuthenticated) {
+            startEditing(match);
+        } else {
+            setPendingEditMatch(match);
+            setShowPasswordModal(true);
+            setPasswordInput('');
+            setPasswordError(false);
+        }
+    };
+
+    const handlePasswordSubmit = () => {
+        if (passwordInput === ADMIN_PASSWORD) {
+            setIsAuthenticated(true);
+            setShowPasswordModal(false);
+            if (pendingEditMatch) {
+                startEditing(pendingEditMatch);
+            }
+        } else {
+            setPasswordError(true);
+        }
+    };
+
+    const startEditing = (match) => {
+        const currentResult = results[match.id] || { homeScore: 0, awayScore: 0 };
+        setEditingMatch(match.id);
+        setEditScores({ home: currentResult.homeScore, away: currentResult.awayScore });
+    };
+
+    const saveEdit = (matchId) => {
+        onUpdateResult(matchId, {
+            homeScore: editScores.home,
+            awayScore: editScores.away,
+            cards: results[matchId]?.cards || { home: { yellow: 0, red: 0 }, away: { yellow: 0, red: 0 } }
+        });
+        setEditingMatch(null);
+    };
+
+    const cancelEdit = () => {
+        setEditingMatch(null);
+    };
 
     return (
         <div className="dashboard-container">
+            {/* Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content glass-panel">
+                        <div className="modal-header">
+                            <Lock size={24} className="modal-icon" />
+                            <h3>Şifre Gerekli</h3>
+                        </div>
+                        <p>Skoru düzenlemek için yönetici şifresini girin:</p>
+                        <input
+                            type="password"
+                            value={passwordInput}
+                            onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                            onKeyDown={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                            placeholder="Şifre"
+                            className={`password-input ${passwordError ? 'error' : ''}`}
+                            autoFocus
+                        />
+                        {passwordError && <span className="error-text">Yanlış şifre!</span>}
+                        <div className="modal-buttons">
+                            <button onClick={() => setShowPasswordModal(false)} className="btn-cancel">İptal</button>
+                            <button onClick={handlePasswordSubmit} className="btn-confirm">Onayla</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="dashboard-header">
                 <div className="header-left">
@@ -85,15 +161,42 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome }) =
                         )}
                         {displayFixtures.map(match => {
                             const isPlayed = results[match.id];
+                            const isEditing = editingMatch === match.id;
+
                             return (
                                 <div key={match.id} className="fixture-card">
                                     <div className="team-home">{match.home}</div>
 
                                     <div className="match-status">
-                                        {isPlayed ? (
-                                            <span className="score-final">
-                                                {results[match.id].homeScore} - {results[match.id].awayScore}
-                                            </span>
+                                        {isEditing ? (
+                                            <div className="edit-score-inline">
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    value={editScores.home}
+                                                    onChange={(e) => setEditScores({ ...editScores, home: parseInt(e.target.value) || 0 })}
+                                                    className="score-input"
+                                                />
+                                                <span>-</span>
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    value={editScores.away}
+                                                    onChange={(e) => setEditScores({ ...editScores, away: parseInt(e.target.value) || 0 })}
+                                                    className="score-input"
+                                                />
+                                                <button onClick={() => saveEdit(match.id)} className="btn-save-score"><Check size={16} /></button>
+                                                <button onClick={cancelEdit} className="btn-cancel-score"><X size={16} /></button>
+                                            </div>
+                                        ) : isPlayed ? (
+                                            <div className="score-with-edit">
+                                                <span className="score-final">
+                                                    {results[match.id].homeScore} - {results[match.id].awayScore}
+                                                </span>
+                                                <button onClick={() => handleEditClick(match)} className="btn-edit-score">
+                                                    <Edit2 size={14} />
+                                                </button>
+                                            </div>
                                         ) : (
                                             <button
                                                 onClick={() => onStartMatch(match)}

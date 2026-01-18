@@ -126,6 +126,11 @@ function App() {
                         mode={mode}
                         onStartMatch={handleStartMatch}
                         onGoHome={handleGoHome}
+                        onUpdateResult={(matchId, result) => {
+                            const newResults = { ...results, [matchId]: result };
+                            setResults(newResults);
+                            saveTournament(teams, mode, fixtures, newResults);
+                        }}
                     />
                 )}
                 {status === 'MATCH' && (
