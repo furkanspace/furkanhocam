@@ -1183,3 +1183,212 @@ button:disabled {
         padding: 0.5rem 0.2rem;
     }
 }
+
+/* ============================================
+   TROPHY CASE STYLES
+   ============================================ */
+
+.trophy-case {
+    width: 100%;
+    padding: 2rem;
+}
+
+.trophy-case h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    margin: 0 0 1.5rem 0;
+    color: var(--accent);
+}
+
+.trophy-icon {
+    color: #ffd700;
+}
+
+.trophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.trophy-item {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.02));
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.trophy-animation {
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+}
+
+.trophy-gold {
+    color: #ffd700;
+}
+
+.trophy-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.trophy-winner {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.trophy-tournament {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.trophy-date {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.btn-share {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.btn-share:hover {
+    background: var(--accent);
+    color: black;
+}
+
+/* Share Modal */
+.share-modal {
+    max-width: 450px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.modal-close:hover {
+    color: white;
+}
+
+.share-trophy-display {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.share-trophy-display h3 {
+    font-size: 2rem;
+    color: #ffd700;
+    margin: 0;
+}
+
+.share-trophy-display p {
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin: 0;
+    letter-spacing: 3px;
+}
+
+.share-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: white;
+}
+
+.share-btn.facebook {
+    background: #1877f2;
+}
+
+.share-btn.twitter {
+    background: #000;
+}
+
+.share-btn.whatsapp {
+    background: #25d366;
+}
+
+.share-btn.copy {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.share-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* Complete Tournament Button */
+.complete-tournament-section {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.btn-complete-tournament {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: black;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+}
+
+.btn-complete-tournament:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 30px rgba(255, 215, 0, 0.5);
+}
+
+.winner-name {
+    color: #ffd700;
+    font-size: 1.2rem;
+}
+
+/* Mobile adjustments for trophy */
+@media (max-width: 768px) {
+    .trophy-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .share-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-complete-tournament {
+        width: 100%;
+        justify-content: center;
+    }
+}

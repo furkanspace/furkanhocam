@@ -6,13 +6,14 @@ import Dashboard from './components/Dashboard';
 import MatchView from './components/MatchView';
 
 function App() {
-    const [status, setStatus] = useState('SETUP'); // SETUP, DRAW, DASHBOARD, MATCH
+    const [status, setStatus] = useState('SETUP');
     const [teams, setTeams] = useState([]);
     const [mode, setMode] = useState('LEAGUE');
     const [fixtures, setFixtures] = useState([]);
     const [activeMatch, setActiveMatch] = useState(null);
     const [results, setResults] = useState({});
     const [activeTournaments, setActiveTournaments] = useState([]);
+    const [completedTournaments, setCompletedTournaments] = useState([]);
     const [currentTournamentId, setCurrentTournamentId] = useState(null);
 
     // Load saved tournaments from localStorage
@@ -20,6 +21,10 @@ function App() {
         const saved = localStorage.getItem('activeTournaments');
         if (saved) {
             setActiveTournaments(JSON.parse(saved));
+        }
+        const completed = localStorage.getItem('completedTournaments');
+        if (completed) {
+            setCompletedTournaments(JSON.parse(completed));
         }
     }, []);
 
@@ -43,6 +48,29 @@ function App() {
         setCurrentTournamentId(id);
     };
 
+    // Complete a tournament with a winner
+    const completeTournament = (winner) => {
+        const tournament = activeTournaments.find(t => t.id === currentTournamentId);
+        if (!tournament) return;
+
+        const completed = {
+            id: currentTournamentId,
+            name: tournament.name,
+            winner: winner,
+            date: new Date().toLocaleDateString('tr-TR'),
+            mode: mode
+        };
+
+        const updatedCompleted = [...completedTournaments, completed];
+        setCompletedTournaments(updatedCompleted);
+        localStorage.setItem('completedTournaments', JSON.stringify(updatedCompleted));
+
+        // Remove from active
+        const updatedActive = activeTournaments.filter(t => t.id !== currentTournamentId);
+        setActiveTournaments(updatedActive);
+        localStorage.setItem('activeTournaments', JSON.stringify(updatedActive));
+    };
+
     const handleDeleteTournament = (tournamentId) => {
         const updated = activeTournaments.filter(t => t.id !== tournamentId);
         setActiveTournaments(updated);
@@ -64,7 +92,6 @@ function App() {
     };
 
     const handleStartMatch = (match) => {
-        // Don't start match if it's a BYE
         if (match.away === 'BYE') {
             return;
         }
@@ -90,10 +117,14 @@ function App() {
     };
 
     const handleGoHome = () => {
-        // Save current state before going home
         if (fixtures.length > 0) {
             saveTournament(teams, mode, fixtures, results);
         }
+        setStatus('SETUP');
+    };
+
+    const handleCompleteTournament = (winner) => {
+        completeTournament(winner);
         setStatus('SETUP');
     };
 
@@ -107,6 +138,7 @@ function App() {
                         activeTournaments={activeTournaments}
                         onResumeTournament={handleResumeTournament}
                         onDeleteTournament={handleDeleteTournament}
+                        completedTournaments={completedTournaments}
                     />
                 )}
                 {status === 'DRAW' && (
@@ -131,6 +163,7 @@ function App() {
                             setResults(newResults);
                             saveTournament(teams, mode, fixtures, newResults);
                         }}
+                        onCompleteTournament={handleCompleteTournament}
                     />
                 )}
                 {status === 'MATCH' && (

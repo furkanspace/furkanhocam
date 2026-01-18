@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Calendar, TrendingUp, Home, Edit2, Check, X, Lock } from 'lucide-react';
+import { Calendar, TrendingUp, Home, Edit2, Check, X, Lock, Trophy } from 'lucide-react';
 
 const ADMIN_PASSWORD = 'halilhoca...com';
 
-const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onUpdateResult }) => {
+const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onUpdateResult, onCompleteTournament }) => {
     const [activeTab, setActiveTab] = useState('FIXTURES');
     const [editingMatch, setEditingMatch] = useState(null);
     const [editScores, setEditScores] = useState({ home: 0, away: 0 });
@@ -12,6 +12,7 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
     const [passwordInput, setPasswordInput] = useState('');
     const [passwordError, setPasswordError] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [showCompleteModal, setShowCompleteModal] = useState(false);
 
     const getStandings = () => {
         const stats = {};
@@ -54,6 +55,7 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
 
     const standings = getStandings();
     const displayFixtures = fixtures.filter(f => f.away !== 'BYE');
+    const allMatchesPlayed = displayFixtures.length > 0 && displayFixtures.every(f => results[f.id]);
 
     const handleEditClick = (match) => {
         if (isAuthenticated) {
@@ -97,6 +99,14 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
         setEditingMatch(null);
     };
 
+    const handleCompleteTournament = () => {
+        const winner = standings[0]?.name;
+        if (winner && onCompleteTournament) {
+            onCompleteTournament(winner);
+        }
+        setShowCompleteModal(false);
+    };
+
     return (
         <div className="dashboard-container">
             {/* Password Modal */}
@@ -121,6 +131,24 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
                         <div className="modal-buttons">
                             <button onClick={() => setShowPasswordModal(false)} className="btn-cancel">İptal</button>
                             <button onClick={handlePasswordSubmit} className="btn-confirm">Onayla</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Complete Tournament Modal */}
+            {showCompleteModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content glass-panel">
+                        <div className="modal-header">
+                            <Trophy size={24} className="modal-icon" />
+                            <h3>Turnuvayı Bitir</h3>
+                        </div>
+                        <p>Şampiyon: <strong className="winner-name">{standings[0]?.name}</strong></p>
+                        <p>Bu turnuvayı bitirmek istediğinize emin misiniz?</p>
+                        <div className="modal-buttons">
+                            <button onClick={() => setShowCompleteModal(false)} className="btn-cancel">İptal</button>
+                            <button onClick={handleCompleteTournament} className="btn-confirm">Bitir</button>
                         </div>
                     </div>
                 </div>
@@ -248,6 +276,16 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
                     </table>
                 )}
             </div>
+
+            {/* Complete Tournament Button */}
+            {allMatchesPlayed && onCompleteTournament && (
+                <div className="complete-tournament-section">
+                    <button onClick={() => setShowCompleteModal(true)} className="btn-complete-tournament">
+                        <Trophy size={20} />
+                        Turnuvayı Bitir ve Şampiyonu İlan Et
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

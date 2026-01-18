@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, X, Trophy, List, Edit2, Check, Trash2 } from 'lucide-react';
+import TrophyCase from './TrophyCase';
 
-const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTournament }) => {
+const ADMIN_PASSWORD = 'halilhoca...com';
+
+const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTournament, completedTournaments = [] }) => {
     const [names, setNames] = useState([]);
     const [currentName, setCurrentName] = useState('');
     const [mode, setMode] = useState('LEAGUE');
@@ -54,6 +57,11 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTo
             exit={{ opacity: 0, y: -20 }}
             className="setup-page"
         >
+            {/* Trophy Case Section */}
+            {completedTournaments.length > 0 && (
+                <TrophyCase trophies={completedTournaments} />
+            )}
+
             {/* Active Tournaments Section */}
             {activeTournaments.length > 0 && (
                 <div className="active-tournaments glass-panel">
