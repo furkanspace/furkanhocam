@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import LandingPage from './components/LandingPage';
+import StudySection from './components/StudySection';
 import Setup from './components/Setup';
 import DrawCeremony from './components/DrawCeremony';
 import Dashboard from './components/Dashboard';
@@ -158,7 +159,17 @@ function App() {
                     <LandingPage
                         key="landing"
                         onEnterGame={() => setStatus('SETUP')}
-                        onEnterStudy={() => window.open('https://www.google.com', '_blank')} // Placeholder
+                        onEnterStudy={() => setStatus('STUDY')}
+                    />
+                )}
+                {status === 'STUDY' && (
+                    <StudySection
+                        key="study"
+                        onBack={() => setStatus('LANDING')}
+                        onSelectSubject={(subject) => {
+                            // Future: handle subject selection
+                            alert(`${subject.name} yakında aktif olacak!`);
+                        }}
                     />
                 )}
                 {status === 'SETUP' && (
