@@ -1950,3 +1950,254 @@ button:disabled {
         justify-content: center;
     }
 }
+
+/* ============================================
+   ENHANCED SHARE MODAL STYLES
+   ============================================ */
+
+.share-modal-enhanced {
+    max-width: 500px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    position: relative;
+}
+
+.share-card-container {
+    margin-bottom: 1.5rem;
+}
+
+.share-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+    border: 3px solid #ffd700;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+}
+
+.share-card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 30%);
+    pointer-events: none;
+}
+
+.share-card-confetti {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle, #ffd700 2px, transparent 2px),
+        radial-gradient(circle, #ff8c00 2px, transparent 2px),
+        radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 50px 50px, 70px 70px, 30px 30px;
+    background-position: 0 0, 20px 30px, 40px 20px;
+    opacity: 0.1;
+    animation: confetti-float 20s linear infinite;
+}
+
+@keyframes confetti-float {
+    0% {
+        background-position: 0 0, 20px 30px, 40px 20px;
+    }
+
+    100% {
+        background-position: 50px 50px, 70px 80px, 70px 70px;
+    }
+}
+
+.share-card-content {
+    position: relative;
+    z-index: 10;
+}
+
+.share-card-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffd700;
+    margin-bottom: 1rem;
+    letter-spacing: 3px;
+}
+
+.share-card-trophy {
+    margin: 1rem 0;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.7));
+}
+
+.share-card-winner {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0.5rem 0;
+    text-transform: uppercase;
+    font-family: var(--header-font);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.share-card-divider {
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #ffd700, transparent);
+    margin: 1rem auto;
+}
+
+.share-card-tournament {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0;
+}
+
+.share-card-date {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0.3rem 0;
+}
+
+.share-card-footer {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #00ff88;
+    letter-spacing: 2px;
+}
+
+.btn-download-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    background: linear-gradient(135deg, #ffd700, #ff8c00);
+    color: black;
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.btn-download-card:hover {
+    transform: scale(1.02);
+}
+
+.share-text-preview {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.share-text-preview h4 {
+    color: var(--text-secondary);
+    margin: 0 0 0.5rem;
+    font-size: 0.9rem;
+}
+
+.share-text-box {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.85rem;
+    color: white;
+    white-space: pre-wrap;
+    max-height: 150px;
+    overflow-y: auto;
+    line-height: 1.5;
+}
+
+.btn-copy-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.7rem;
+    border-radius: 8px;
+    margin-top: 0.8rem;
+}
+
+.btn-copy-text:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-copy-text.copied {
+    background: var(--accent);
+    color: black;
+}
+
+.share-buttons-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.share-btn-large {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    transition: all 0.2s;
+}
+
+.share-btn-large.facebook {
+    background: linear-gradient(135deg, #1877f2, #0d5dc9);
+}
+
+.share-btn-large.twitter {
+    background: linear-gradient(135deg, #1da1f2, #0c85d0);
+}
+
+.share-btn-large.whatsapp {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+}
+
+.share-btn-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Mobile Share Modal */
+@media (max-width: 768px) {
+    .share-modal-enhanced {
+        padding: 1.5rem;
+    }
+
+    .share-card {
+        padding: 1.5rem;
+    }
+
+    .share-card-header {
+        font-size: 1.2rem;
+    }
+
+    .share-card-winner {
+        font-size: 1.8rem;
+    }
+
+    .share-card-trophy svg {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    .share-btn-large {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+}
