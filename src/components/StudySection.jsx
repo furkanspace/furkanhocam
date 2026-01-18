@@ -9,7 +9,8 @@ const subjects = [
         icon: Atom,
         color: '#8b5cf6',
         gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
-        description: 'Evrenin yasalarını keşfet'
+        description: 'Evrenin yasalarını keşfet',
+        link: null
     },
     {
         id: 'math',
@@ -17,7 +18,8 @@ const subjects = [
         icon: Calculator,
         color: '#f59e0b',
         gradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
-        description: 'Sayıların gücünü öğren'
+        description: 'Sayıların gücünü öğren',
+        link: null
     },
     {
         id: 'english',
@@ -25,7 +27,8 @@ const subjects = [
         icon: Languages,
         color: '#ec4899',
         gradient: 'linear-gradient(135deg, #ec4899, #db2777)',
-        description: 'Dünyayla iletişim kur'
+        description: 'Kelime Kampı ile İngilizce öğren',
+        link: 'https://kelime-kampi-app.vercel.app/'
     }
 ];
 
@@ -62,7 +65,13 @@ const StudySection = ({ onBack, onSelectSubject }) => {
                             transition={{ delay: index * 0.15 }}
                             whileHover={{ scale: 1.05, y: -10 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => onSelectSubject && onSelectSubject(subject)}
+                            onClick={() => {
+                                if (subject.link) {
+                                    window.open(subject.link, '_blank');
+                                } else {
+                                    alert(`${subject.name} yakında aktif olacak!`);
+                                }
+                            }}
                             style={{ '--subject-color': subject.color, '--subject-gradient': subject.gradient }}
                         >
                             <motion.div
