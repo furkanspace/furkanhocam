@@ -1,0 +1,157 @@
+Dosya ve Dizin Listesi
+==================================================
+
+📁 Ana Dizin
+  📂 ielts-toefl/
+  📂 ilkokul/
+  📂 lise/
+  📂 ortaokul/
+  📂 yds/
+  📂 yokdil/
+  📂 üniversite hazırlık/
+
+📁 ielts-toefl
+  📂 ielts-toefl-1/
+  📂 ielts-toefl-2/
+  📂 ielts-toefl-3/
+
+📁 lise
+  📂 10.sinif/
+  📂 11.sinif/
+  📂 12.sinif/
+  📂 9.sinif/
+
+ 📁 ortaokul
+  📂 5.sinif/
+  📂 6.sinif/
+  📂 7.sinif/
+  📂 8.sinif/
+
+📁 ilkokul
+  📂 4.sinif/
+
+📁 ilkokul\4.sinif
+  📄 1.xlsx (6603 bytes)
+  📄 10_Food and Drinks.docx (17513 bytes)
+  📄 1_Classroom Rules.docx (18652 bytes)
+  📄 2_Nationality.docx (19482 bytes)
+  📄 3_Cartoon Characters.docx (21506 bytes)
+  📄 4_Free Time.docx (18117 bytes)
+  📄 5_My Day.docx (19881 bytes)
+  📄 6_Fun With Science.docx (18439 bytes)
+  📄 7_Jobs.docx (19344 bytes)
+  📄 8_My Clothes.docx (18221 bytes)
+  📄 9_My Friends.docx (18313 bytes)
+  
+📁 ortaokul\5.sinif
+  📄 1-Hello.docx (15312 bytes)
+  📄 10-Festivals.docx (16411 bytes)
+  📄 2-My Town.pdf (553495 bytes)
+  📄 3-Games and Hobbies.docx (16571 bytes)
+  📄 4-My Daily Routine.pdf (428139 bytes)
+  📄 5-Health.docx (17230 bytes)
+  📄 6-Movies.docx (19816 bytes)
+  📄 7-Party Time.docx (25434 bytes)
+  📄 8-Fitness.docx (22833 bytes)
+  📄 9-The Animal Shelter.docx (15667 bytes)
+
+📁 ortaokul\6.sinif
+  📄 1-Life.docx (17023 bytes)
+  📄 10-Democracy.docx (17813 bytes)
+  📄 2-Yummy Breakfast.docx (20102 bytes)
+  📄 3-Downtown.docx (24488 bytes)
+  📄 4-Weather and Emotions.docx (16550 bytes)
+  📄 5-At the Fair.docx (17624 bytes)
+  📄 6-Occupations.docx (20310 bytes)
+  📄 7-Holidays.docx (22013 bytes)
+  📄 8-Bookworms.doc (31744 bytes)
+  📄 9-Saving the Planet.doc (34816 bytes)
+
+📁 ortaokul\7.sinif\source1
+  📄 unit1.xlsx (10984 bytes)
+  📄 unit10.xlsx (10764 bytes)
+  📄 unit2.xlsx (10807 bytes)
+  📄 unit3.xlsx (12082 bytes)
+  📄 unit4.xlsx (7720 bytes)
+  📄 unit5.xlsx (10840 bytes)
+  📄 unit6.xlsx (10378 bytes)
+  📄 unit7.xlsx (11086 bytes)
+  📄 unit8.xlsx (9923 bytes)
+  📄 unit9.xlsx (6989 bytes)
+
+📁 ortaokul\8.sinif
+  📄 1-Friendship.pdf (480593 bytes)
+  📄 10-Natural Forces.pdf (444599 bytes)
+  📄 2-Teen.pdf (465888 bytes)
+  📄 3-The Kitchen.pdf (466989 bytes)
+  📄 4-On the Phone.pdf (443433 bytes)
+  📄 5-The Internet.pdf (456615 bytes)
+  📄 6-Adventures.pdf (468533 bytes)
+  📄 7-Tourism.pdf (466375 bytes)
+  📄 8-Chores.pdf (435168 bytes)
+  📄 9-Science.pdf (445821 bytes)  
+  
+📁 lise\9.sinif
+  📄 1-Studying Abroad.pdf (465586 bytes)
+  📄 10-Television and Social Media.pdf (283066 bytes)
+  📄 2-My Environment.pdf (462725 bytes)
+  📄 3-Movies.pdf (286351 bytes)
+  📄 4-Human in Nature.pdf (285715 bytes)
+  📄 5-Inspirational People.pdf (279822 bytes)
+  📄 6-Bridging Cultures.pdf (281347 bytes)
+  📄 7-World Heritage.pdf (273712 bytes)
+  📄 8-Emergency and Health Problems.pdf (283366 bytes)
+  📄 9-Invitations and Celebrations.pdf (277533 bytes)  
+
+📁 lise\10.sinif
+  📄 1-School Life_flashcards.pdf (91816 bytes)
+  📄 10-Shopping_flashcards.pdf (87700 bytes)
+  📄 2-Plans_flashcards.pdf (89365 bytes)
+  📄 3-Legendary Figures_flashcards.pdf (87197 bytes)
+  📄 4-Traditions_flashcards.pdf (88657 bytes)
+  📄 5-Travel_flashcards.pdf (91247 bytes)
+  📄 6-Helpful Tips_flashcards.pdf (93131 bytes)
+  📄 7-Food and Festivals_flashcards.pdf (88596 bytes)
+  📄 8-Digital Era_flashcards.pdf (90617 bytes)
+  📄 9-Heroes and Heroines_flashcards.pdf (89879 bytes)
+
+📁 lise\11.sinif
+  📄 1-Future Jobs.doc (388096 bytes)
+  📄 10-Values and Norms.pdf (279836 bytes)
+  📄 2-Hobbies and Skills.pdf (299603 bytes)
+  📄 3-Hard Times.pdf (281210 bytes)
+  📄 4-What a Life.pdf (284294 bytes)
+  📄 5-Back to the Past.pdf (280080 bytes)
+  📄 6-Open Your Heart.pdf (291036 bytes)
+  📄 7-Facts About Turkey.pdf (274550 bytes)
+  📄 8-Sports.pdf (273192 bytes)
+  📄 9-My Friends.pdf (276054 bytes)
+
+📁 lise\12.sinif
+  📄 1-Music.doc (139264 bytes)
+  📄 10-Manners.docx (20265 bytes)
+  📄 2-Friendship.doc (130560 bytes)
+  📄 3-Human Rights.doc (122368 bytes)
+  📄 4-Coming Soon.doc (137728 bytes)
+  📄 5-Psychology.doc (67584 bytes)
+  📄 6-Favors.docx (26751 bytes)
+  📄 7-News Stories.doc (94208 bytes)
+  📄 8-Alternative Energy.docx (31209 bytes)
+  📄 9-Technology.doc (168960 bytes)
+
+📁 yds
+  📂 yds1/
+  📂 yds2/
+  📂 yds3/
+
+📁 yokdil
+  📂 yokdilfen/
+  📂 yokdilsaglik/
+  📂 yokdilsosyal/
+
+📁 üniversite hazırlık
+  📂 hazirlik1/
+  📂 hazirlik2/
+  📂 hazirlik3/
+  📂 hazirlik4/
+

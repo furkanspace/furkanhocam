@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import LandingPage from './components/LandingPage';
 import StudySection from './components/StudySection';
+import EnglishSection from './components/EnglishSection';
 import Setup from './components/Setup';
 import DrawCeremony from './components/DrawCeremony';
 import Dashboard from './components/Dashboard';
@@ -167,9 +168,18 @@ function App() {
                         key="study"
                         onBack={() => setStatus('LANDING')}
                         onSelectSubject={(subject) => {
-                            // Future: handle subject selection
-                            alert(`${subject.name} yakında aktif olacak!`);
+                            if (subject.id === 'english') {
+                                setStatus('ENGLISH');
+                            } else {
+                                alert(`${subject.name} yakında aktif olacak!`);
+                            }
                         }}
+                    />
+                )}
+                {status === 'ENGLISH' && (
+                    <EnglishSection
+                        key="english"
+                        onBack={() => setStatus('STUDY')}
                     />
                 )}
                 {status === 'SETUP' && (

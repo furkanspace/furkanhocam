@@ -627,6 +627,283 @@ button:disabled {
     }
 }
 
+/* ============================================
+   ENGLISH SECTION STYLES
+   ============================================ */
+
+.english-section-page {
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #1a0a1e 0%, #2d1b3d 50%, #1a0a1e 100%);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.english-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.btn-back-english {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.btn-back-english:hover {
+    background: #ec4899;
+    color: white;
+}
+
+.english-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.english-title-icon {
+    color: #ec4899;
+}
+
+.english-title h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin: 0;
+    font-family: var(--header-font);
+    text-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+}
+
+.english-title p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Kelime Kampı Banner */
+.kelime-kampi-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    background: linear-gradient(135deg, #ec4899, #db2777);
+    padding: 1.2rem 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    color: white;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.banner-icon {
+    font-size: 2rem;
+}
+
+.banner-content h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.banner-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.english-content {
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* Categories Grid */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.category-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--category-color);
+    border-radius: 16px 16px 0 0;
+}
+
+.category-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--category-color);
+    color: var(--category-color);
+}
+
+.category-card h3 {
+    color: white;
+    margin: 0 0 0.3rem;
+    font-size: 1.1rem;
+}
+
+.category-count {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+}
+
+.category-arrow {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--category-color);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.category-card:hover .category-arrow {
+    opacity: 1;
+}
+
+/* Subcategories List */
+.subcategories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.subcategory-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--category-color);
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    cursor: pointer;
+}
+
+.subcategory-info h4 {
+    color: white;
+    margin: 0 0 0.2rem;
+    font-size: 1.1rem;
+}
+
+.subcategory-info span {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+}
+
+.subcategory-card svg {
+    color: var(--category-color);
+}
+
+/* Topics List */
+.topics-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.8rem;
+}
+
+.topic-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.topic-icon {
+    color: var(--category-color);
+}
+
+.topic-card span {
+    color: white;
+    font-size: 0.95rem;
+}
+
+.empty-topics {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile English Section */
+@media (max-width: 768px) {
+    .english-section-page {
+        padding: 1rem;
+    }
+
+    .english-title h1 {
+        font-size: 1.8rem;
+    }
+
+    .categories-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .category-card {
+        padding: 1rem;
+    }
+
+    .category-icon-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .category-icon-wrapper svg {
+        width: 25px;
+        height: 25px;
+    }
+
+    .topics-list {
+        grid-template-columns: 1fr;
+    }
+
+    .kelime-kampi-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+}
+
 /* === Setup Page === */
 .setup-page {
     display: flex;

@@ -28,7 +28,7 @@ const subjects = [
         color: '#ec4899',
         gradient: 'linear-gradient(135deg, #ec4899, #db2777)',
         description: 'Kelime Kampı ile İngilizce öğren',
-        link: 'https://kelime-kampi-app.vercel.app/'
+        link: null
     }
 ];
 
