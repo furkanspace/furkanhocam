@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Oswald:wght@500;700&display=swap');
+
+:root {
+    --bg-primary: #050505;
+    --bg-secondary: #0f0f0f;
+    --accent: #00ff88;
+    --accent-secondary: #00b8ff;
+    --accent-glow: rgba(0, 255, 136, 0.4);
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-hover: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --danger: #ff4444;
+    --warning: #ffcc00;
+
+    --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 15% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 85% 30%, rgba(0, 184, 255, 0.03) 0%, transparent 40%);
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-header {
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    font-family: 'Oswald', sans-serif;
+}
+
+/* Utilities */
+.glass-panel {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-accent {
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
