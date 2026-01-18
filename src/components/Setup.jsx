@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Trophy, List, Edit2, Check } from 'lucide-react';
+import { Plus, X, Trophy, List, Edit2, Check, Trash2 } from 'lucide-react';
 
-const Setup = ({ onStart, activeTournaments = [], onResumeTournament }) => {
+const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTournament }) => {
     const [names, setNames] = useState([]);
     const [currentName, setCurrentName] = useState('');
     const [mode, setMode] = useState('LEAGUE');
@@ -40,6 +40,13 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament }) => {
         onStart(names, mode);
     };
 
+    const handleDeleteTournament = (e, tournamentId) => {
+        e.stopPropagation();
+        if (confirm('Bu turnuvayı silmek istediğinize emin misiniz?')) {
+            onDeleteTournament(tournamentId);
+        }
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -53,12 +60,20 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament }) => {
                     <h2>Aktif Turnuvalar</h2>
                     <div className="tournament-list">
                         {activeTournaments.map((t, i) => (
-                            <div key={i} className="tournament-item" onClick={() => onResumeTournament(t)}>
+                            <div key={t.id || i} className="tournament-item" onClick={() => onResumeTournament(t)}>
                                 <div className="tournament-info">
                                     <span className="tournament-name">{t.name || `Turnuva ${i + 1}`}</span>
                                     <span className="tournament-meta">{t.teams.length} takım • {t.mode === 'LEAGUE' ? 'Lig' : 'Kupa'}</span>
                                 </div>
-                                <span className="resume-btn">Devam Et →</span>
+                                <div className="tournament-actions">
+                                    <span className="resume-btn">Devam Et →</span>
+                                    <button
+                                        className="btn-delete-tournament"
+                                        onClick={(e) => handleDeleteTournament(e, t.id)}
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>

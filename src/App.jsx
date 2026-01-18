@@ -43,6 +43,12 @@ function App() {
         setCurrentTournamentId(id);
     };
 
+    const handleDeleteTournament = (tournamentId) => {
+        const updated = activeTournaments.filter(t => t.id !== tournamentId);
+        setActiveTournaments(updated);
+        localStorage.setItem('activeTournaments', JSON.stringify(updated));
+    };
+
     const handleStartTournament = (teamList, tournamentMode) => {
         setTeams(teamList);
         setMode(tournamentMode);
@@ -58,6 +64,10 @@ function App() {
     };
 
     const handleStartMatch = (match) => {
+        // Don't start match if it's a BYE
+        if (match.away === 'BYE') {
+            return;
+        }
         setActiveMatch(match);
         setStatus('MATCH');
     };
@@ -96,6 +106,7 @@ function App() {
                         onStart={handleStartTournament}
                         activeTournaments={activeTournaments}
                         onResumeTournament={handleResumeTournament}
+                        onDeleteTournament={handleDeleteTournament}
                     />
                 )}
                 {status === 'DRAW' && (

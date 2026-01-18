@@ -130,9 +130,27 @@ button:disabled {
     color: var(--text-secondary);
 }
 
+.tournament-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .resume-btn {
     color: var(--accent);
     font-weight: bold;
+}
+
+.btn-delete-tournament {
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.btn-delete-tournament:hover {
+    background: rgba(255, 68, 68, 0.2);
+    color: var(--danger);
 }
 
 /* Setup Container */

@@ -45,6 +45,9 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome }) =
 
     const standings = getStandings();
 
+    // Filter out BYE matches from display
+    const displayFixtures = fixtures.filter(f => f.away !== 'BYE');
+
     return (
         <div className="dashboard-container">
             {/* Header */}
@@ -77,7 +80,10 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome }) =
             <div className="glass-panel content-area">
                 {activeTab === 'FIXTURES' && (
                     <div className="fixtures-list">
-                        {fixtures.map(match => {
+                        {displayFixtures.length === 0 && (
+                            <p className="empty-msg">Henüz maç yok.</p>
+                        )}
+                        {displayFixtures.map(match => {
                             const isPlayed = results[match.id];
                             return (
                                 <div key={match.id} className="fixture-card">
