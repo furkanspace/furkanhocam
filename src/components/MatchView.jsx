@@ -1,128 +1,140 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Plus, Minus } from 'lucide-react';
 
 const MatchView = ({ match, onFinish, onBack }) => {
     const [homeScore, setHomeScore] = useState(0);
     const [awayScore, setAwayScore] = useState(0);
-    const [cards, setCards] = useState({ home: [], away: [] }); // Array of 'Y' or 'R'
-    const [lastAction, setLastAction] = useState(null); // For animation popup
+    const [homeYellow, setHomeYellow] = useState(0);
+    const [homeRed, setHomeRed] = useState(0);
+    const [awayYellow, setAwayYellow] = useState(0);
+    const [awayRed, setAwayRed] = useState(0);
 
-    const addGoal = (team) => {
-        if (team === 'home') setHomeScore(h => h + 1);
-        else setAwayScore(a => a + 1);
-        triggerAction('GOAL!');
+    const changeScore = (team, delta) => {
+        if (team === 'home') {
+            setHomeScore(Math.max(0, homeScore + delta));
+        } else {
+            setAwayScore(Math.max(0, awayScore + delta));
+        }
     };
 
-    const addCard = (team, type) => {
-        setCards(prev => ({
-            ...prev,
-            [team]: [...prev[team], type]
-        }));
-        triggerAction(`${type === 'Y' ? 'YELLOW' : 'RED'} CARD!`);
-    };
-
-    const triggerAction = (text) => {
-        setLastAction(text);
-        setTimeout(() => setLastAction(null), 2000);
+    const changeCard = (team, cardType, delta) => {
+        if (team === 'home') {
+            if (cardType === 'yellow') {
+                setHomeYellow(Math.max(0, homeYellow + delta));
+            } else {
+                setHomeRed(Math.max(0, homeRed + delta));
+            }
+        } else {
+            if (cardType === 'yellow') {
+                setAwayYellow(Math.max(0, awayYellow + delta));
+            } else {
+                setAwayRed(Math.max(0, awayRed + delta));
+            }
+        }
     };
 
     return (
         <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full h-screen flex flex-col relative"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="match-container"
         >
             {/* Top Bar */}
-            <div className="absolute top-0 left-0 p-4 z-10">
-                <button onClick={onBack} className="flex items-center text-secondary hover:text-white">
-                    <ArrowLeft className="mr-2" /> Back
+            <div className="match-header">
+                <button onClick={onBack} className="btn-back">
+                    <ArrowLeft className="icon" /> Geri
                 </button>
             </div>
 
-            {/* Action Popup */}
-            <AnimatePresence>
-                {lastAction && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.5, y: -50 }}
-                        animate={{ opacity: 1, scale: 1.5, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        className="absolute top-1/3 left-1/2 transform -translate-x-1/2 z-50 pointer-events-none"
-                    >
-                        <h1 className="text-8xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-accent to-white drop-shadow-[0_0_20px_rgba(0,255,136,0.8)]">
-                            {lastAction}
-                        </h1>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
             {/* Scoreboard Area */}
-            <div className="flex-1 flex items-center justify-center gap-20">
+            <div className="scoreboard">
 
                 {/* Home Team */}
-                <div className="flex flex-col items-center">
-                    <h2 className="text-5xl font-header mb-4">{match.home}</h2>
-                    <div className="text-9xl font-mono font-bold text-white bg-black/40 p-10 rounded-3xl border-2 border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)]">
+                <div className="team-column">
+                    <span className="team-label home-label">EV SAHİBİ</span>
+                    <h2 className="team-title">{match.home}</h2>
+                    <div className="score-display">
                         {homeScore}
                     </div>
 
-                    {/* Controls */}
-                    <div className="flex gap-4 mt-8">
-                        <button
-                            onClick={() => addGoal('home')}
-                            className="bg-accent hover:bg-white text-black font-bold py-3 px-8 rounded-full text-xl shadow-lg hover:shadow-[0_0_20px_var(--accent)] transition-all"
-                        >
-                            GOAL
+                    {/* Score Controls */}
+                    <div className="score-controls">
+                        <button onClick={() => changeScore('home', -1)} className="btn-control minus">
+                            <Minus size={20} />
                         </button>
-                        <div className="flex gap-2">
-                            <button onClick={() => addCard('home', 'Y')} className="bg-warning w-12 h-12 rounded hover:scale-110 transition"></button>
-                            <button onClick={() => addCard('home', 'R')} className="bg-danger w-12 h-12 rounded hover:scale-110 transition"></button>
-                        </div>
+                        <span className="control-label">GOL</span>
+                        <button onClick={() => changeScore('home', 1)} className="btn-control plus">
+                            <Plus size={20} />
+                        </button>
                     </div>
-                    <div className="flex gap-1 mt-2 min-h-[20px]">
-                        {cards.home.map((c, i) => (
-                            <div key={i} className={`w-3 h-4 rounded-sm ${c === 'Y' ? 'bg-warning' : 'bg-danger'}`} />
-                        ))}
+
+                    {/* Card Controls */}
+                    <div className="card-row">
+                        <div className="card-control-group">
+                            <button onClick={() => changeCard('home', 'yellow', -1)} className="btn-card-sm minus-card">-</button>
+                            <div className="card-display yellow-card">{homeYellow}</div>
+                            <button onClick={() => changeCard('home', 'yellow', 1)} className="btn-card-sm plus-card">+</button>
+                        </div>
+                        <div className="card-control-group">
+                            <button onClick={() => changeCard('home', 'red', -1)} className="btn-card-sm minus-card">-</button>
+                            <div className="card-display red-card">{homeRed}</div>
+                            <button onClick={() => changeCard('home', 'red', 1)} className="btn-card-sm plus-card">+</button>
+                        </div>
                     </div>
                 </div>
 
-                <div className="font-mono text-4xl text-secondary opacity-50">VS</div>
+                <div className="vs-divider">VS</div>
 
                 {/* Away Team */}
-                <div className="flex flex-col items-center">
-                    <h2 className="text-5xl font-header mb-4">{match.away}</h2>
-                    <div className="text-9xl font-mono font-bold text-white bg-black/40 p-10 rounded-3xl border-2 border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)]">
+                <div className="team-column">
+                    <span className="team-label away-label">DEPLASMAN</span>
+                    <h2 className="team-title">{match.away}</h2>
+                    <div className="score-display">
                         {awayScore}
                     </div>
 
-                    {/* Controls */}
-                    <div className="flex gap-4 mt-8">
-                        <button
-                            onClick={() => addGoal('away')}
-                            className="bg-accent hover:bg-white text-black font-bold py-3 px-8 rounded-full text-xl shadow-lg hover:shadow-[0_0_20px_var(--accent)] transition-all"
-                        >
-                            GOAL
+                    {/* Score Controls */}
+                    <div className="score-controls">
+                        <button onClick={() => changeScore('away', -1)} className="btn-control minus">
+                            <Minus size={20} />
                         </button>
-                        <div className="flex gap-2">
-                            <button onClick={() => addCard('away', 'Y')} className="bg-warning w-12 h-12 rounded hover:scale-110 transition"></button>
-                            <button onClick={() => addCard('away', 'R')} className="bg-danger w-12 h-12 rounded hover:scale-110 transition"></button>
-                        </div>
+                        <span className="control-label">GOL</span>
+                        <button onClick={() => changeScore('away', 1)} className="btn-control plus">
+                            <Plus size={20} />
+                        </button>
                     </div>
-                    <div className="flex gap-1 mt-2 min-h-[20px]">
-                        {cards.away.map((c, i) => (
-                            <div key={i} className={`w-3 h-4 rounded-sm ${c === 'Y' ? 'bg-warning' : 'bg-danger'}`} />
-                        ))}
+
+                    {/* Card Controls */}
+                    <div className="card-row">
+                        <div className="card-control-group">
+                            <button onClick={() => changeCard('away', 'yellow', -1)} className="btn-card-sm minus-card">-</button>
+                            <div className="card-display yellow-card">{awayYellow}</div>
+                            <button onClick={() => changeCard('away', 'yellow', 1)} className="btn-card-sm plus-card">+</button>
+                        </div>
+                        <div className="card-control-group">
+                            <button onClick={() => changeCard('away', 'red', -1)} className="btn-card-sm minus-card">-</button>
+                            <div className="card-display red-card">{awayRed}</div>
+                            <button onClick={() => changeCard('away', 'red', 1)} className="btn-card-sm plus-card">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Footer Actions */}
-            <div className="p-8 flex justify-center border-t border-white/10 bg-black/50 backdrop-blur-md">
+            <div className="match-footer">
                 <button
-                    onClick={() => onFinish(match.id, { homeScore, awayScore, cards })}
-                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 py-4 px-12 rounded-xl text-xl font-bold tracking-widest transition"
+                    onClick={() => onFinish(match.id, {
+                        homeScore,
+                        awayScore,
+                        cards: {
+                            home: { yellow: homeYellow, red: homeRed },
+                            away: { yellow: awayYellow, red: awayRed }
+                        }
+                    })}
+                    className="btn-finish"
                 >
-                    FINISH MATCH
+                    MAÇI BİTİR
                 </button>
             </div>
         </motion.div>

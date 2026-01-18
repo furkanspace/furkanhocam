@@ -57,6 +57,7 @@ function App() {
                         results={results}
                         mode={mode}
                         onStartMatch={handleStartMatch}
+                        onGoHome={() => setStatus('SETUP')}
                     />
                 )}
                 {status === 'MATCH' && (

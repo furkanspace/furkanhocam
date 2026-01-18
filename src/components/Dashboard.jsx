@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar, TrendingUp } from 'lucide-react';
+import { Calendar, TrendingUp, Home } from 'lucide-react';
 
-const Dashboard = ({ teams, fixtures, results, mode, onStartMatch }) => {
+const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome }) => {
     const [activeTab, setActiveTab] = useState('FIXTURES'); // FIXTURES, STANDINGS
 
-    // Calculate Standings
     const getStandings = () => {
         const stats = {};
         teams.forEach(t => {
@@ -15,19 +13,15 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch }) => {
         Object.keys(results).forEach(matchId => {
             const res = results[matchId];
             const match = fixtures.find(f => f.id === matchId);
-            if (!match) return; // Should not happen
+            if (!match) return;
 
-            // Update Played
             stats[match.home].p += 1;
             stats[match.away].p += 1;
-
-            // Update Goals
             stats[match.home].gf += res.homeScore;
             stats[match.home].ga += res.awayScore;
             stats[match.away].gf += res.awayScore;
             stats[match.away].ga += res.homeScore;
 
-            // Update W/D/L & Pts
             if (res.homeScore > res.awayScore) {
                 stats[match.home].w += 1;
                 stats[match.home].pts += 3;
@@ -52,56 +46,62 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch }) => {
     const standings = getStandings();
 
     return (
-        <div className="w-full max-w-4xl px-4 py-8">
+        <div className="dashboard-container">
             {/* Header */}
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl italic font-bold">Tournament Dashboard</h1>
-                <div className="flex gap-2 bg-black/40 p-1 rounded-lg">
+            <div className="dashboard-header">
+                <div className="header-left">
+                    <button onClick={onGoHome} className="btn-home">
+                        <Home size={20} />
+                        Ana Sayfa
+                    </button>
+                    <h1>TURNUVA</h1>
+                </div>
+                <div className="tab-controls">
                     <button
                         onClick={() => setActiveTab('FIXTURES')}
-                        className={`px-4 py-2 rounded-md ${activeTab === 'FIXTURES' ? 'bg-accent text-black font-bold' : 'text-secondary hover:text-white'}`}
+                        className={`tab-btn ${activeTab === 'FIXTURES' ? 'active' : ''}`}
                     >
-                        <Calendar size={18} className="inline mr-2" />Fixtures
+                        <Calendar size={18} className="icon" />Fikstür
                     </button>
                     {mode === 'LEAGUE' && (
                         <button
                             onClick={() => setActiveTab('STANDINGS')}
-                            className={`px-4 py-2 rounded-md ${activeTab === 'STANDINGS' ? 'bg-accent text-black font-bold' : 'text-secondary hover:text-white'}`}
+                            className={`tab-btn ${activeTab === 'STANDINGS' ? 'active' : ''}`}
                         >
-                            <TrendingUp size={18} className="inline mr-2" />Standings
+                            <TrendingUp size={18} className="icon" />Puan Durumu
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className="glass-panel p-6 min-h-[500px]">
+            <div className="glass-panel content-area">
                 {activeTab === 'FIXTURES' && (
-                    <div className="grid gap-4">
+                    <div className="fixtures-list">
                         {fixtures.map(match => {
                             const isPlayed = results[match.id];
                             return (
-                                <div key={match.id} className="flex items-center justify-between bg-white/5 p-4 rounded hover:bg-white/10 transition">
-                                    <div className="flex-1 text-right text-xl font-bold">{match.home}</div>
+                                <div key={match.id} className="fixture-card">
+                                    <div className="team-home">{match.home}</div>
 
-                                    <div className="px-6 flex flex-col items-center">
+                                    <div className="match-status">
                                         {isPlayed ? (
-                                            <span className="text-2xl font-mono text-accent">
+                                            <span className="score-final">
                                                 {results[match.id].homeScore} - {results[match.id].awayScore}
                                             </span>
                                         ) : (
                                             <button
                                                 onClick={() => onStartMatch(match)}
-                                                className="bg-white/10 px-4 py-1 rounded text-sm hover:bg-accent hover:text-black transition"
+                                                className="btn-play"
                                             >
-                                                PLAY
+                                                OYNA
                                             </button>
                                         )}
-                                        <span className="text-xs text-secondary mt-1">
-                                            {isPlayed ? 'FT' : 'VS'}
+                                        <span className="vs-label">
+                                            {isPlayed ? 'BİTTİ' : 'VS'}
                                         </span>
                                     </div>
 
-                                    <div className="flex-1 text-left text-xl font-bold">{match.away}</div>
+                                    <div className="team-away">{match.away}</div>
                                 </div>
                             );
                         })}
@@ -109,30 +109,30 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch }) => {
                 )}
 
                 {activeTab === 'STANDINGS' && (
-                    <table className="w-full text-left">
+                    <table className="standings-table">
                         <thead>
-                            <tr className="text-secondary border-b border-white/10">
-                                <th className="p-3">Pos</th>
-                                <th className="p-3">Team</th>
-                                <th className="p-3 text-center">P</th>
-                                <th className="p-3 text-center">W</th>
-                                <th className="p-3 text-center">D</th>
-                                <th className="p-3 text-center">L</th>
-                                <th className="p-3 text-center">GD</th>
-                                <th className="p-3 text-center text-accent">Pts</th>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Takım</th>
+                                <th>O</th>
+                                <th>G</th>
+                                <th>B</th>
+                                <th>M</th>
+                                <th>AV</th>
+                                <th className="highlight-text">P</th>
                             </tr>
                         </thead>
                         <tbody>
                             {standings.map((team, index) => (
-                                <tr key={team.name} className="border-b border-white/5 hover:bg-white/5">
-                                    <td className="p-3 font-mono text-secondary">{index + 1}</td>
-                                    <td className="p-3 font-bold">{team.name}</td>
-                                    <td className="p-3 text-center">{team.p}</td>
-                                    <td className="p-3 text-center">{team.w}</td>
-                                    <td className="p-3 text-center">{team.d}</td>
-                                    <td className="p-3 text-center">{team.l}</td>
-                                    <td className="p-3 text-center font-mono">{(team.gf - team.ga) > 0 ? `+${team.gf - team.ga}` : team.gf - team.ga}</td>
-                                    <td className="p-3 text-center font-bold text-accent text-lg">{team.pts}</td>
+                                <tr key={team.name}>
+                                    <td className="mono-text">{index + 1}</td>
+                                    <td className="bold-text">{team.name}</td>
+                                    <td>{team.p}</td>
+                                    <td>{team.w}</td>
+                                    <td>{team.d}</td>
+                                    <td>{team.l}</td>
+                                    <td className="mono-text">{(team.gf - team.ga) > 0 ? `+${team.gf - team.ga}` : team.gf - team.ga}</td>
+                                    <td className="points-cell">{team.pts}</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -9,7 +9,6 @@ const DrawCeremony = ({ teams, mode, onComplete }) => {
     const generateFixtures = () => {
         let fixtures = [];
         if (mode === 'LEAGUE') {
-            // Double Round Robin or Single? Let's do Single for simplicity first
             for (let i = 0; i < teams.length; i++) {
                 for (let j = i + 1; j < teams.length; j++) {
                     fixtures.push({
@@ -21,9 +20,7 @@ const DrawCeremony = ({ teams, mode, onComplete }) => {
                 }
             }
         } else {
-            // Cup - Simple pairing
             const shuffled = [...teams].sort(() => 0.5 - Math.random());
-            // Handle byes if needed (implied: power of 2 or just random pairs)
             for (let i = 0; i < shuffled.length; i += 2) {
                 if (i + 1 < shuffled.length) {
                     fixtures.push({
@@ -34,14 +31,13 @@ const DrawCeremony = ({ teams, mode, onComplete }) => {
                         played: false
                     });
                 } else {
-                    // Bye
                     fixtures.push({
                         id: `cup_bye_${i}`,
                         home: shuffled[i],
                         away: 'BYE',
                         round: 1,
                         played: true,
-                        winner: shuffled[i] // Auto advance
+                        winner: shuffled[i]
                     })
                 }
             }
@@ -51,11 +47,8 @@ const DrawCeremony = ({ teams, mode, onComplete }) => {
 
     useEffect(() => {
         const fixtures = generateFixtures();
-
-        // Animation sequence
         let count = 0;
         const interval = setInterval(() => {
-            // Show random potential matchups
             const r1 = teams[Math.floor(Math.random() * teams.length)];
             const r2 = teams[Math.floor(Math.random() * teams.length)];
             setDisplayFixture(`${r1} VS ${r2}`);
@@ -75,17 +68,17 @@ const DrawCeremony = ({ teams, mode, onComplete }) => {
     }, [teams, mode]);
 
     return (
-        <div className="flex flex-col items-center justify-center p-10 text-center">
+        <div className="draw-container">
             <motion.h2
-                className="text-6xl font-header mb-10 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500"
-                animate={{ scale: [1, 1.05, 1] }}
+                className="draw-title"
+                animate={{ scale: [1, 1.05, 1], textShadow: ["0 0 10px #fff", "0 0 20px #00ff88", "0 0 10px #fff"] }}
                 transition={{ repeat: Infinity, duration: 2 }}
             >
                 DRAWING...
             </motion.h2>
 
-            <div className="glass-panel p-10 w-full max-w-xl">
-                <h1 className="text-5xl text-accent font-bold font-header">
+            <div className="glass-panel draw-box">
+                <h1 className="draw-result neon-text">
                     {displayFixture}
                 </h1>
             </div>
