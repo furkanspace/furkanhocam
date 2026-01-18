@@ -9,12 +9,26 @@ const DrawCeremony = ({ teams, mode, onComplete }) => {
     const generateFixtures = () => {
         let fixtures = [];
         if (mode === 'LEAGUE') {
+            // First round: Team A vs Team B
             for (let i = 0; i < teams.length; i++) {
                 for (let j = i + 1; j < teams.length; j++) {
                     fixtures.push({
-                        id: `match_${i}_${j}`,
+                        id: `match_${i}_${j}_1`,
                         home: teams[i],
                         away: teams[j],
+                        round: 1,
+                        played: false
+                    });
+                }
+            }
+            // Second round: Team B vs Team A (reverse fixtures)
+            for (let i = 0; i < teams.length; i++) {
+                for (let j = i + 1; j < teams.length; j++) {
+                    fixtures.push({
+                        id: `match_${i}_${j}_2`,
+                        home: teams[j],
+                        away: teams[i],
+                        round: 2,
                         played: false
                     });
                 }
