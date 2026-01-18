@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, X, Trophy, List, Edit2, Check, Trash2 } from 'lucide-react';
+import { Plus, X, Trophy, List, Edit2, Check, Trash2, ArrowLeft } from 'lucide-react';
 import TrophyCase from './TrophyCase';
 
-const ADMIN_PASSWORD = 'halilhoca...com';
-
-const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTournament, completedTournaments = [] }) => {
+const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTournament, completedTournaments = [], onDeleteTrophy, onEditTrophy, onBackToLanding }) => {
     const [names, setNames] = useState([]);
     const [currentName, setCurrentName] = useState('');
+    const [tournamentName, setTournamentName] = useState('');
     const [mode, setMode] = useState('LEAGUE');
     const [editingIndex, setEditingIndex] = useState(null);
     const [editValue, setEditValue] = useState('');
@@ -40,7 +39,8 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTo
 
     const handleStart = () => {
         if (names.length < 2) return alert('En az 2 takım gerekli!');
-        onStart(names, mode);
+        const name = tournamentName.trim() || `Turnuva ${new Date().toLocaleDateString('tr-TR')}`;
+        onStart(names, mode, name);
     };
 
     const handleDeleteTournament = (e, tournamentId) => {
@@ -57,9 +57,20 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTo
             exit={{ opacity: 0, y: -20 }}
             className="setup-page"
         >
+            {/* Back to Landing Button */}
+            {onBackToLanding && (
+                <button className="btn-back-landing" onClick={onBackToLanding}>
+                    <ArrowLeft size={20} /> Ana Menü
+                </button>
+            )}
+
             {/* Trophy Case Section */}
             {completedTournaments.length > 0 && (
-                <TrophyCase trophies={completedTournaments} />
+                <TrophyCase
+                    trophies={completedTournaments}
+                    onDeleteTrophy={onDeleteTrophy}
+                    onEditTrophy={onEditTrophy}
+                />
             )}
 
             {/* Active Tournaments Section */}
@@ -95,7 +106,19 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTo
                     <p className="subtitle">Şampiyonluğa hazır mısın?</p>
                 </div>
 
-                {/* Input Section */}
+                {/* Tournament Name Input */}
+                <div className="tournament-name-input">
+                    <label>Turnuva Adı</label>
+                    <input
+                        type="text"
+                        value={tournamentName}
+                        onChange={(e) => setTournamentName(e.target.value)}
+                        placeholder="Örn: Yıl Sonu Turnuvası 2026"
+                        className="team-input"
+                    />
+                </div>
+
+                {/* Team Input Section */}
                 <div className="input-group">
                     <input
                         type="text"

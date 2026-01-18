@@ -69,6 +69,392 @@ button:disabled {
     align-items: center;
 }
 
+/* ============================================
+   LANDING PAGE STYLES
+   ============================================ */
+
+.landing-page {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.landing-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    position: relative;
+    cursor: pointer;
+    transition: flex 0.3s ease;
+    overflow: hidden;
+}
+
+.study-section {
+    background: linear-gradient(135deg, #0a1628 0%, #1a365d 50%, #1e3a5f 100%);
+}
+
+.game-section {
+    background: linear-gradient(135deg, #051a0a 0%, #0a3d1a 50%, #0d4a1f 100%);
+}
+
+.section-bg-icons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.floating-icon {
+    position: absolute;
+    opacity: 0.2;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.study-section .floating-icon {
+    color: rgba(59, 130, 246, 0.4);
+}
+
+.game-section .floating-icon {
+    color: rgba(0, 255, 136, 0.4);
+}
+
+.section-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.brain-half {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.left-brain {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.1));
+    border: 2px solid rgba(59, 130, 246, 0.5);
+    color: #3b82f6;
+}
+
+.right-brain {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 255, 136, 0.1));
+    border: 2px solid rgba(0, 255, 136, 0.5);
+    color: #00ff88;
+}
+
+.section-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 3px;
+}
+
+.study-section h1 {
+    color: #3b82f6;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.game-section h1 {
+    color: #00ff88;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.section-content h2 {
+    font-size: 4rem;
+    font-weight: 800;
+    margin: 0;
+    font-family: var(--header-font);
+}
+
+.study-section h2 {
+    color: white;
+    text-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+.game-section h2 {
+    color: white;
+    text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
+}
+
+.section-content p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.btn-enter {
+    padding: 1rem 3rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.study-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+}
+
+.study-btn:hover {
+    box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
+}
+
+.game-btn {
+    background: linear-gradient(135deg, #00ff88, #00b368);
+    color: black;
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.4);
+}
+
+.game-btn:hover {
+    box-shadow: 0 6px 30px rgba(0, 255, 136, 0.6);
+}
+
+.landing-divider {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    transform: translateX(-50%);
+}
+
+.divider-line {
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.divider-text {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Back to Landing Button */
+.btn-back-landing {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    z-index: 100;
+}
+
+.btn-back-landing:hover {
+    background: var(--accent);
+    color: black;
+}
+
+/* Tournament Name Input */
+.tournament-name-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.tournament-name-input label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Tournament Title Section */
+.tournament-title-section {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.btn-edit-name {
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    opacity: 0.5;
+}
+
+.btn-edit-name:hover {
+    color: var(--accent);
+    opacity: 1;
+}
+
+.edit-name-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.edit-name-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 1.5rem;
+    font-family: var(--header-font);
+}
+
+.btn-save-name,
+.btn-cancel-name {
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.btn-save-name {
+    background: var(--accent);
+    color: black;
+}
+
+.btn-cancel-name {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+/* Trophy Admin Controls */
+.trophy-admin-controls {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    gap: 0.3rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.trophy-item:hover .trophy-admin-controls {
+    opacity: 1;
+}
+
+.btn-trophy-edit,
+.btn-trophy-delete {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 0.4rem;
+    border-radius: 4px;
+}
+
+.btn-trophy-edit:hover {
+    background: var(--accent);
+    color: black;
+}
+
+.btn-trophy-delete:hover {
+    background: var(--danger);
+}
+
+.trophy-item {
+    position: relative;
+}
+
+.trophy-edit-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Mobile Landing Page */
+@media (max-width: 768px) {
+    .landing-page {
+        flex-direction: column;
+    }
+
+    .landing-section {
+        min-height: 50vh;
+        padding: 2rem;
+    }
+
+    .section-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .section-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .brain-half {
+        width: 80px;
+        height: 80px;
+    }
+
+    .brain-half svg {
+        width: 50px;
+        height: 50px;
+    }
+
+    .landing-divider {
+        position: relative;
+        left: auto;
+        top: auto;
+        bottom: auto;
+        transform: none;
+        flex-direction: row;
+        height: auto;
+        padding: 0.5rem 0;
+    }
+
+    .divider-line {
+        width: 100%;
+        height: 2px;
+        flex: 1;
+    }
+
+    .divider-text {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .btn-back-landing {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+    }
+
+    .tournament-title-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .edit-name-input {
+        font-size: 1.2rem;
+        width: 100%;
+    }
+}
+
 /* === Setup Page === */
 .setup-page {
     display: flex;

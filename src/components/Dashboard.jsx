@@ -3,16 +3,18 @@ import { Calendar, TrendingUp, Home, Edit2, Check, X, Lock, Trophy } from 'lucid
 
 const ADMIN_PASSWORD = 'halilhoca...com';
 
-const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onUpdateResult, onCompleteTournament }) => {
+const Dashboard = ({ teams, fixtures, results, mode, tournamentName, onStartMatch, onGoHome, onUpdateResult, onCompleteTournament, onUpdateTournamentName }) => {
     const [activeTab, setActiveTab] = useState('FIXTURES');
     const [editingMatch, setEditingMatch] = useState(null);
     const [editScores, setEditScores] = useState({ home: 0, away: 0 });
     const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const [pendingEditMatch, setPendingEditMatch] = useState(null);
+    const [pendingAction, setPendingAction] = useState(null);
     const [passwordInput, setPasswordInput] = useState('');
     const [passwordError, setPasswordError] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [showCompleteModal, setShowCompleteModal] = useState(false);
+    const [editingName, setEditingName] = useState(false);
+    const [newTournamentName, setNewTournamentName] = useState(tournamentName || '');
 
     const getStandings = () => {
         const stats = {};
@@ -57,11 +59,11 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
     const displayFixtures = fixtures.filter(f => f.away !== 'BYE');
     const allMatchesPlayed = displayFixtures.length > 0 && displayFixtures.every(f => results[f.id]);
 
-    const handleEditClick = (match) => {
+    const requestAuth = (action) => {
         if (isAuthenticated) {
-            startEditing(match);
+            action();
         } else {
-            setPendingEditMatch(match);
+            setPendingAction(() => action);
             setShowPasswordModal(true);
             setPasswordInput('');
             setPasswordError(false);
@@ -72,18 +74,18 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
         if (passwordInput === ADMIN_PASSWORD) {
             setIsAuthenticated(true);
             setShowPasswordModal(false);
-            if (pendingEditMatch) {
-                startEditing(pendingEditMatch);
-            }
+            if (pendingAction) pendingAction();
         } else {
             setPasswordError(true);
         }
     };
 
-    const startEditing = (match) => {
-        const currentResult = results[match.id] || { homeScore: 0, awayScore: 0 };
-        setEditingMatch(match.id);
-        setEditScores({ home: currentResult.homeScore, away: currentResult.awayScore });
+    const handleEditClick = (match) => {
+        requestAuth(() => {
+            const currentResult = results[match.id] || { homeScore: 0, awayScore: 0 };
+            setEditingMatch(match.id);
+            setEditScores({ home: currentResult.homeScore, away: currentResult.awayScore });
+        });
     };
 
     const saveEdit = (matchId) => {
@@ -107,6 +109,20 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
         setShowCompleteModal(false);
     };
 
+    const handleEditName = () => {
+        requestAuth(() => {
+            setEditingName(true);
+            setNewTournamentName(tournamentName);
+        });
+    };
+
+    const saveTournamentName = () => {
+        if (newTournamentName.trim() && onUpdateTournamentName) {
+            onUpdateTournamentName(newTournamentName.trim());
+        }
+        setEditingName(false);
+    };
+
     return (
         <div className="dashboard-container">
             {/* Password Modal */}
@@ -117,7 +133,7 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
                             <Lock size={24} className="modal-icon" />
                             <h3>Şifre Gerekli</h3>
                         </div>
-                        <p>Skoru düzenlemek için yönetici şifresini girin:</p>
+                        <p>Bu işlem için yönetici şifresini girin:</p>
                         <input
                             type="password"
                             value={passwordInput}
@@ -161,7 +177,28 @@ const Dashboard = ({ teams, fixtures, results, mode, onStartMatch, onGoHome, onU
                         <Home size={20} />
                         Ana Sayfa
                     </button>
-                    <h1>TURNUVA</h1>
+                    <div className="tournament-title-section">
+                        {editingName ? (
+                            <div className="edit-name-inline">
+                                <input
+                                    type="text"
+                                    value={newTournamentName}
+                                    onChange={(e) => setNewTournamentName(e.target.value)}
+                                    className="edit-name-input"
+                                    autoFocus
+                                />
+                                <button onClick={saveTournamentName} className="btn-save-name"><Check size={18} /></button>
+                                <button onClick={() => setEditingName(false)} className="btn-cancel-name"><X size={18} /></button>
+                            </div>
+                        ) : (
+                            <>
+                                <h1>{tournamentName || 'TURNUVA'}</h1>
+                                <button onClick={handleEditName} className="btn-edit-name">
+                                    <Edit2 size={16} />
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="tab-controls">
                     <button

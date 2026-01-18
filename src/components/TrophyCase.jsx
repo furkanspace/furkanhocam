@@ -1,23 +1,70 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, Share2, X } from 'lucide-react';
+import { Trophy, Share2, X, Edit2, Trash2, Check, Lock } from 'lucide-react';
 
-const TrophyCase = ({ trophies }) => {
+const ADMIN_PASSWORD = 'halilhoca...com';
+
+const TrophyCase = ({ trophies, onDeleteTrophy, onEditTrophy }) => {
     const [selectedTrophy, setSelectedTrophy] = useState(null);
     const [showShareModal, setShowShareModal] = useState(false);
+    const [editingTrophy, setEditingTrophy] = useState(null);
+    const [editWinner, setEditWinner] = useState('');
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [pendingAction, setPendingAction] = useState(null);
+    const [passwordInput, setPasswordInput] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const handleShare = (trophy) => {
         setSelectedTrophy(trophy);
         setShowShareModal(true);
     };
 
-    const getShareUrl = () => {
-        return window.location.href;
+    const requestAuth = (action) => {
+        if (isAuthenticated) {
+            action();
+        } else {
+            setPendingAction(() => action);
+            setShowPasswordModal(true);
+            setPasswordInput('');
+            setPasswordError(false);
+        }
     };
 
-    const getShareText = (trophy) => {
-        return `🏆 ${trophy.winner} şampiyonluğu kazandı! ${trophy.name}`;
+    const handlePasswordSubmit = () => {
+        if (passwordInput === ADMIN_PASSWORD) {
+            setIsAuthenticated(true);
+            setShowPasswordModal(false);
+            if (pendingAction) pendingAction();
+        } else {
+            setPasswordError(true);
+        }
     };
+
+    const handleEdit = (trophy) => {
+        requestAuth(() => {
+            setEditingTrophy(trophy.id);
+            setEditWinner(trophy.winner);
+        });
+    };
+
+    const saveEdit = (trophyId) => {
+        if (editWinner.trim() && onEditTrophy) {
+            onEditTrophy(trophyId, { winner: editWinner.trim() });
+        }
+        setEditingTrophy(null);
+    };
+
+    const handleDelete = (trophy) => {
+        requestAuth(() => {
+            if (confirm(`"${trophy.winner}" şampiyonluğunu silmek istediğinize emin misiniz?`)) {
+                onDeleteTrophy(trophy.id);
+            }
+        });
+    };
+
+    const getShareUrl = () => window.location.href;
+    const getShareText = (trophy) => `🏆 ${trophy.winner} şampiyonluğu kazandı! ${trophy.name}`;
 
     const shareToFacebook = () => {
         const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}&quote=${encodeURIComponent(getShareText(selectedTrophy))}`;
@@ -41,6 +88,33 @@ const TrophyCase = ({ trophies }) => {
 
     return (
         <>
+            {/* Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
+                    <div className="modal-content glass-panel" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <Lock size={24} className="modal-icon" />
+                            <h3>Admin Şifresi</h3>
+                        </div>
+                        <p>Bu işlem için yönetici şifresini girin:</p>
+                        <input
+                            type="password"
+                            value={passwordInput}
+                            onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                            onKeyDown={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                            placeholder="Şifre"
+                            className={`password-input ${passwordError ? 'error' : ''}`}
+                            autoFocus
+                        />
+                        {passwordError && <span className="error-text">Yanlış şifre!</span>}
+                        <div className="modal-buttons">
+                            <button onClick={() => setShowPasswordModal(false)} className="btn-cancel">İptal</button>
+                            <button onClick={handlePasswordSubmit} className="btn-confirm">Onayla</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="trophy-case glass-panel">
                 <h2><Trophy className="trophy-icon" /> Kupalar</h2>
                 <div className="trophy-grid">
@@ -52,6 +126,16 @@ const TrophyCase = ({ trophies }) => {
                             animate={{ scale: 1 }}
                             transition={{ delay: index * 0.1, type: 'spring' }}
                         >
+                            {/* Admin Controls */}
+                            <div className="trophy-admin-controls">
+                                <button className="btn-trophy-edit" onClick={() => handleEdit(trophy)}>
+                                    <Edit2 size={14} />
+                                </button>
+                                <button className="btn-trophy-delete" onClick={() => handleDelete(trophy)}>
+                                    <Trash2 size={14} />
+                                </button>
+                            </div>
+
                             <motion.div
                                 className="trophy-animation"
                                 animate={{
@@ -67,7 +151,22 @@ const TrophyCase = ({ trophies }) => {
                                 <Trophy size={60} className="trophy-gold" />
                             </motion.div>
                             <div className="trophy-info">
-                                <span className="trophy-winner">{trophy.winner}</span>
+                                {editingTrophy === trophy.id ? (
+                                    <div className="trophy-edit-inline">
+                                        <input
+                                            type="text"
+                                            value={editWinner}
+                                            onChange={(e) => setEditWinner(e.target.value)}
+                                            className="edit-input"
+                                            autoFocus
+                                        />
+                                        <button onClick={() => saveEdit(trophy.id)} className="btn-edit-save">
+                                            <Check size={16} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <span className="trophy-winner">{trophy.winner}</span>
+                                )}
                                 <span className="trophy-tournament">{trophy.name}</span>
                                 <span className="trophy-date">{trophy.date}</span>
                             </div>

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import LandingPage from './components/LandingPage';
 import Setup from './components/Setup';
 import DrawCeremony from './components/DrawCeremony';
 import Dashboard from './components/Dashboard';
 import MatchView from './components/MatchView';
 
 function App() {
-    const [status, setStatus] = useState('SETUP');
+    const [status, setStatus] = useState('LANDING'); // LANDING, SETUP, DRAW, DASHBOARD, MATCH
     const [teams, setTeams] = useState([]);
     const [mode, setMode] = useState('LEAGUE');
+    const [tournamentName, setTournamentName] = useState('');
     const [fixtures, setFixtures] = useState([]);
     const [activeMatch, setActiveMatch] = useState(null);
     const [results, setResults] = useState({});
@@ -29,11 +31,11 @@ function App() {
     }, []);
 
     // Save current tournament state
-    const saveTournament = (teamsData, modeData, fixturesData, resultsData) => {
+    const saveTournament = (teamsData, modeData, fixturesData, resultsData, name) => {
         const id = currentTournamentId || Date.now().toString();
         const tournament = {
             id,
-            name: `Turnuva ${new Date().toLocaleDateString('tr-TR')}`,
+            name: name || tournamentName || `Turnuva ${new Date().toLocaleDateString('tr-TR')}`,
             teams: teamsData,
             mode: modeData,
             fixtures: fixturesData,
@@ -77,9 +79,24 @@ function App() {
         localStorage.setItem('activeTournaments', JSON.stringify(updated));
     };
 
-    const handleStartTournament = (teamList, tournamentMode) => {
+    const handleDeleteTrophy = (trophyId) => {
+        const updated = completedTournaments.filter(t => t.id !== trophyId);
+        setCompletedTournaments(updated);
+        localStorage.setItem('completedTournaments', JSON.stringify(updated));
+    };
+
+    const handleEditTrophy = (trophyId, newData) => {
+        const updated = completedTournaments.map(t =>
+            t.id === trophyId ? { ...t, ...newData } : t
+        );
+        setCompletedTournaments(updated);
+        localStorage.setItem('completedTournaments', JSON.stringify(updated));
+    };
+
+    const handleStartTournament = (teamList, tournamentMode, name) => {
         setTeams(teamList);
         setMode(tournamentMode);
+        setTournamentName(name);
         setResults({});
         setCurrentTournamentId(null);
         setStatus('DRAW');
@@ -87,7 +104,7 @@ function App() {
 
     const handleDrawComplete = (generatedFixtures) => {
         setFixtures(generatedFixtures);
-        saveTournament(teams, mode, generatedFixtures, {});
+        saveTournament(teams, mode, generatedFixtures, {}, tournamentName);
         setStatus('DASHBOARD');
     };
 
@@ -102,7 +119,7 @@ function App() {
     const handleMatchFinish = (matchId, result) => {
         const newResults = { ...results, [matchId]: result };
         setResults(newResults);
-        saveTournament(teams, mode, fixtures, newResults);
+        saveTournament(teams, mode, fixtures, newResults, tournamentName);
         setStatus('DASHBOARD');
         setActiveMatch(null);
     };
@@ -110,6 +127,7 @@ function App() {
     const handleResumeTournament = (tournament) => {
         setTeams(tournament.teams);
         setMode(tournament.mode);
+        setTournamentName(tournament.name);
         setFixtures(tournament.fixtures);
         setResults(tournament.results);
         setCurrentTournamentId(tournament.id);
@@ -118,7 +136,7 @@ function App() {
 
     const handleGoHome = () => {
         if (fixtures.length > 0) {
-            saveTournament(teams, mode, fixtures, results);
+            saveTournament(teams, mode, fixtures, results, tournamentName);
         }
         setStatus('SETUP');
     };
@@ -128,9 +146,21 @@ function App() {
         setStatus('SETUP');
     };
 
+    const handleUpdateTournamentName = (newName) => {
+        setTournamentName(newName);
+        saveTournament(teams, mode, fixtures, results, newName);
+    };
+
     return (
         <div style={{ minHeight: '100vh', width: '100%', position: 'relative' }}>
             <AnimatePresence mode="wait">
+                {status === 'LANDING' && (
+                    <LandingPage
+                        key="landing"
+                        onEnterGame={() => setStatus('SETUP')}
+                        onEnterStudy={() => window.open('https://www.google.com', '_blank')} // Placeholder
+                    />
+                )}
                 {status === 'SETUP' && (
                     <Setup
                         key="setup"
@@ -139,6 +169,9 @@ function App() {
                         onResumeTournament={handleResumeTournament}
                         onDeleteTournament={handleDeleteTournament}
                         completedTournaments={completedTournaments}
+                        onDeleteTrophy={handleDeleteTrophy}
+                        onEditTrophy={handleEditTrophy}
+                        onBackToLanding={() => setStatus('LANDING')}
                     />
                 )}
                 {status === 'DRAW' && (
@@ -156,14 +189,16 @@ function App() {
                         fixtures={fixtures}
                         results={results}
                         mode={mode}
+                        tournamentName={tournamentName}
                         onStartMatch={handleStartMatch}
                         onGoHome={handleGoHome}
                         onUpdateResult={(matchId, result) => {
                             const newResults = { ...results, [matchId]: result };
                             setResults(newResults);
-                            saveTournament(teams, mode, fixtures, newResults);
+                            saveTournament(teams, mode, fixtures, newResults, tournamentName);
                         }}
                         onCompleteTournament={handleCompleteTournament}
+                        onUpdateTournamentName={handleUpdateTournamentName}
                     />
                 )}
                 {status === 'MATCH' && (
