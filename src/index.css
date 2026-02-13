@@ -2807,7 +2807,7 @@ button:disabled {
 }
 
 /* ============================================
-   STUDENT PANEL STYLES
+   STUDENT PANEL STYLES (v2 - Table-based)
    ============================================ */
 
 .sp-page {
@@ -2822,9 +2822,9 @@ button:disabled {
 
 .sp-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
 }
 
 .sp-btn-back {
@@ -2835,7 +2835,7 @@ button:disabled {
     color: rgba(255, 255, 255, 0.7);
     padding: 0.8rem 1.2rem;
     border-radius: 10px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .sp-btn-back:hover {
@@ -2847,7 +2847,7 @@ button:disabled {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem;
 }
 
 .sp-title-icon {
@@ -2855,7 +2855,7 @@ button:disabled {
 }
 
 .sp-title h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     color: white;
     margin: 0;
     font-family: var(--header-font);
@@ -2864,17 +2864,101 @@ button:disabled {
 
 .sp-title p {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 0;
 }
 
-/* Admin Controls */
+/* ─── TABS ─── */
+.sp-tabs {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0;
+}
+
+.sp-tab {
+    padding: 0.8rem 1.5rem;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sp-tab:hover {
+    color: white;
+}
+
+.sp-tab-active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.sp-tab-content {
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* ─── STATS BAR ─── */
+.sp-stats-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.sp-stat {
+    flex: 1;
+    min-width: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 0.8rem;
+    text-align: center;
+}
+
+.sp-stat-num {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+}
+
+.sp-stat-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 0.2rem;
+}
+
+.sp-stat-green .sp-stat-num {
+    color: #00ff88;
+}
+
+.sp-stat-red .sp-stat-num {
+    color: #ff6b6b;
+}
+
+.sp-stat-blue .sp-stat-num {
+    color: #60a5fa;
+}
+
+.sp-stat-pct .sp-stat-num {
+    color: #ffcc00;
+}
+
+/* ─── ADMIN CONTROLS ─── */
 .sp-admin-controls {
     display: flex;
     gap: 1rem;
     align-items: center;
-    width: 100%;
-    max-width: 900px;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
 }
@@ -2893,9 +2977,9 @@ button:disabled {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 0.8rem 1rem;
+    padding: 0.7rem 1rem;
     border-radius: 10px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     cursor: pointer;
 }
 
@@ -2910,7 +2994,7 @@ button:disabled {
     gap: 0.5rem;
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
-    padding: 0.8rem 1.5rem;
+    padding: 0.7rem 1.3rem;
     border-radius: 10px;
     font-weight: bold;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
@@ -2920,10 +3004,8 @@ button:disabled {
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
-/* Add Form */
+/* ─── ADD FORM ─── */
 .sp-add-form {
-    width: 100%;
-    max-width: 900px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     overflow: hidden;
@@ -2953,18 +3035,18 @@ button:disabled {
 .sp-form-row {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
 }
 
 .sp-form-group {
     flex: 1;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .sp-form-group label {
     display: block;
     color: rgba(255, 255, 255, 0.6);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     margin-bottom: 0.3rem;
 }
 
@@ -2974,9 +3056,9 @@ button:disabled {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 0.8rem;
+    padding: 0.7rem;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .sp-form-group select:focus,
@@ -2997,7 +3079,7 @@ button:disabled {
     gap: 0.5rem;
     background: var(--accent);
     color: black;
-    padding: 0.7rem 1.5rem;
+    padding: 0.6rem 1.3rem;
     border-radius: 8px;
     font-weight: bold;
 }
@@ -3008,16 +3090,28 @@ button:disabled {
     gap: 0.5rem;
     background: rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 0.7rem 1.5rem;
+    padding: 0.6rem 1.3rem;
     border-radius: 8px;
 }
 
-/* Lessons Container */
-.sp-lessons-container {
+.sp-textarea {
     width: 100%;
-    max-width: 900px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.7rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    resize: vertical;
+    font-family: inherit;
 }
 
+.sp-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* ─── TABLE ─── */
 .sp-loading,
 .sp-empty {
     text-align: center;
@@ -3030,106 +3124,192 @@ button:disabled {
     opacity: 0.3;
 }
 
-/* Week Group */
-.sp-week-group {
-    margin-bottom: 2rem;
-}
-
-.sp-week-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #3b82f6;
-    font-size: 1rem;
-    margin: 0 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.sp-lesson-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-}
-
-/* Lesson Card */
-.sp-lesson-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-left: 4px solid rgba(255, 255, 255, 0.2);
+.sp-table-wrapper {
+    overflow-x: auto;
     border-radius: 12px;
-    padding: 1rem 1.2rem;
-    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.sp-lesson-card:hover {
-    background: rgba(255, 255, 255, 0.08);
+.sp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
 }
 
-.sp-card-completed {
-    border-left-color: #00ff88;
-    background: rgba(0, 255, 136, 0.03);
+.sp-table thead th {
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    white-space: nowrap;
 }
 
-.sp-card-missed {
-    border-left-color: #ff4444;
-    background: rgba(255, 68, 68, 0.03);
+.sp-table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
 }
 
-.sp-card-makeup-done {
-    border-left-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.03);
+.sp-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
 }
 
-.sp-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
+.sp-table td {
+    padding: 0.7rem 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    vertical-align: middle;
 }
 
-.sp-card-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+.sp-row-completed {
+    border-left: 3px solid #00ff88;
 }
 
-.sp-card-subject {
+.sp-row-missed {
+    border-left: 3px solid #ff4444;
+}
+
+.sp-row-makeup {
+    border-left: 3px solid #ffcc00;
+}
+
+.sp-row-makeup-done {
+    border-left: 3px solid #60a5fa;
+}
+
+.sp-row-pending {
+    border-left: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+.sp-cell-subject {
     font-weight: bold;
-    font-size: 1.1rem;
     color: white;
 }
 
-.sp-card-date {
+.sp-cell-student {
     color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-}
-
-.sp-card-student {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: rgba(255, 255, 255, 0.4);
     font-size: 0.85rem;
 }
 
-.sp-card-notes {
-    margin-top: 0.5rem;
-    padding: 0.5rem 0.8rem;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.9rem;
+.sp-cell-date {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    white-space: nowrap;
 }
 
-/* Status Badges */
+.sp-cell-amount {
+    font-weight: bold;
+    color: #00ff88;
+}
+
+/* Inline Topic Edit */
+.sp-cell-topic {
+    min-width: 120px;
+}
+
+.sp-topic-text {
+    cursor: pointer;
+}
+
+.sp-topic-placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.sp-topic-edit {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.sp-topic-edit input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #3b82f6;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    width: 100%;
+}
+
+.sp-topic-edit button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.2rem;
+    cursor: pointer;
+}
+
+.sp-topic-edit button:hover {
+    color: white;
+}
+
+/* Actions Column */
+.sp-cell-actions {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.sp-act {
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+}
+
+.sp-act-ok {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+}
+
+.sp-act-ok:hover {
+    background: rgba(0, 255, 136, 0.25);
+}
+
+.sp-act-no {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff6b6b;
+}
+
+.sp-act-no:hover {
+    background: rgba(255, 68, 68, 0.25);
+}
+
+.sp-act-makeup {
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+}
+
+.sp-act-makeup:hover {
+    background: rgba(59, 130, 246, 0.25);
+}
+
+.sp-act-del {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.sp-act-del:hover {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff6b6b;
+}
+
+/* ─── BADGES ─── */
 .sp-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    padding: 0.3rem 0.8rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: bold;
     white-space: nowrap;
 }
@@ -3137,96 +3317,29 @@ button:disabled {
 .sp-badge-completed {
     background: rgba(0, 255, 136, 0.15);
     color: #00ff88;
-    border: 1px solid rgba(0, 255, 136, 0.3);
 }
 
 .sp-badge-missed {
     background: rgba(255, 68, 68, 0.15);
     color: #ff6b6b;
-    border: 1px solid rgba(255, 68, 68, 0.3);
 }
 
 .sp-badge-makeup {
     background: rgba(255, 204, 0, 0.15);
     color: #ffcc00;
-    border: 1px solid rgba(255, 204, 0, 0.3);
 }
 
 .sp-badge-makeup-done {
     background: rgba(59, 130, 246, 0.15);
     color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .sp-badge-pending {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* Card Actions */
-.sp-card-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.8rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.sp-action-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    transition: all 0.2s;
-}
-
-.sp-action-complete {
-    background: rgba(0, 255, 136, 0.1);
-    color: #00ff88;
-    border: 1px solid rgba(0, 255, 136, 0.2);
-}
-
-.sp-action-complete:hover {
-    background: rgba(0, 255, 136, 0.2);
-}
-
-.sp-action-miss {
-    background: rgba(255, 68, 68, 0.1);
-    color: #ff6b6b;
-    border: 1px solid rgba(255, 68, 68, 0.2);
-}
-
-.sp-action-miss:hover {
-    background: rgba(255, 68, 68, 0.2);
-}
-
-.sp-action-makeup {
-    background: rgba(59, 130, 246, 0.1);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-}
-
-.sp-action-makeup:hover {
-    background: rgba(59, 130, 246, 0.2);
-}
-
-.sp-action-delete {
-    background: rgba(255, 255, 255, 0.05);
-    color: rgba(255, 255, 255, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-left: auto;
-}
-
-.sp-action-delete:hover {
-    background: rgba(255, 68, 68, 0.2);
-    color: #ff6b6b;
-}
-
-/* Makeup Modal */
+/* ─── MODAL ─── */
 .sp-modal-overlay {
     position: fixed;
     inset: 0;
@@ -3239,7 +3352,7 @@ button:disabled {
 
 .sp-modal {
     padding: 2rem;
-    max-width: 400px;
+    max-width: 450px;
     width: 90%;
     text-align: center;
 }
@@ -3263,9 +3376,9 @@ button:disabled {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 0.8rem;
+    padding: 0.7rem;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 1rem;
 }
 
@@ -3280,14 +3393,159 @@ button:disabled {
     justify-content: center;
 }
 
-/* Mobile Student Panel */
+/* ─── QUESTIONS ─── */
+.sp-questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sp-question-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    border-left: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+.sp-q-answered {
+    border-left-color: #00ff88;
+}
+
+.sp-q-unanswered {
+    border-left-color: #ffcc00;
+}
+
+.sp-q-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.sp-q-subject {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.sp-q-date {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+}
+
+.sp-q-student {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+}
+
+.sp-q-text {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+}
+
+.sp-q-image {
+    max-width: 300px;
+    max-height: 200px;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sp-q-answer {
+    background: rgba(0, 255, 136, 0.05);
+    border: 1px solid rgba(0, 255, 136, 0.15);
+    border-radius: 8px;
+    padding: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.sp-q-answer strong {
+    color: #00ff88;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+}
+
+.sp-q-answer p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0.3rem 0 0;
+}
+
+.sp-q-no-answer {
+    color: rgba(255, 204, 0, 0.6);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+.sp-q-actions {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+}
+
+/* Image Upload */
+.sp-image-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sp-image-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px dashed rgba(59, 130, 246, 0.3);
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.sp-image-upload-btn:hover {
+    background: rgba(59, 130, 246, 0.25);
+}
+
+.sp-image-preview {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── MOBILE ─── */
 @media (max-width: 768px) {
     .sp-page {
         padding: 1rem;
     }
 
     .sp-title h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
+    }
+
+    .sp-tabs {
+        overflow-x: auto;
+    }
+
+    .sp-tab {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+        white-space: nowrap;
     }
 
     .sp-admin-controls {
@@ -3298,11 +3556,25 @@ button:disabled {
         flex-direction: column;
     }
 
-    .sp-card-top {
-        flex-direction: column;
+    .sp-stats-bar {
+        gap: 0.3rem;
     }
 
-    .sp-card-actions {
-        flex-wrap: wrap;
+    .sp-stat {
+        padding: 0.5rem;
+        min-width: 60px;
+    }
+
+    .sp-stat-num {
+        font-size: 1rem;
+    }
+
+    .sp-table {
+        font-size: 0.8rem;
+    }
+
+    .sp-table td,
+    .sp-table th {
+        padding: 0.5rem 0.6rem;
     }
 }

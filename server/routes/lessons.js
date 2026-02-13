@@ -78,13 +78,14 @@ router.get('/students', verifyToken, checkRole(['admin', 'staff']), async (req, 
 // CREATE LESSON (admin only)
 router.post('/', verifyToken, checkRole(['admin', 'staff']), async (req, res) => {
     try {
-        const { student, subject, scheduledDate, notes } = req.body;
+        const { student, subject, scheduledDate, notes, topic } = req.body;
 
         const lesson = new LessonSchedule({
             student,
             subject,
             scheduledDate,
             notes,
+            topic,
             createdBy: req.user._id
         });
 
@@ -97,6 +98,30 @@ router.post('/', verifyToken, checkRole(['admin', 'staff']), async (req, res) =>
     } catch (error) {
         console.error('Error creating lesson:', error);
         res.status(500).json({ message: 'Error creating lesson', error: error.message });
+    }
+});
+
+// UPDATE LESSON (topic, notes, etc.) (admin only)
+router.put('/:id/update', verifyToken, checkRole(['admin', 'staff']), async (req, res) => {
+    try {
+        const { topic, notes, subject, scheduledDate } = req.body;
+        const updateData = {};
+        if (topic !== undefined) updateData.topic = topic;
+        if (notes !== undefined) updateData.notes = notes;
+        if (subject !== undefined) updateData.subject = subject;
+        if (scheduledDate !== undefined) updateData.scheduledDate = scheduledDate;
+
+        const lesson = await LessonSchedule.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true }
+        ).populate('student', 'fullName username role')
+            .populate('createdBy', 'fullName');
+
+        if (!lesson) return res.status(404).json({ message: 'Lesson not found' });
+        res.json(lesson);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating lesson', error: error.message });
     }
 });
 

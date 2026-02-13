@@ -35,6 +35,10 @@ const LessonScheduleSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    topic: {
+        type: String,
+        default: ''
+    },
     notes: {
         type: String,
         default: ''
