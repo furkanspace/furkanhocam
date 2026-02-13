@@ -114,7 +114,7 @@ const categories = [
 ];
 
 import { getFiles, uploadFile, deleteFile } from '../api';
-import { Lock, Upload, Trash2, Download, FileText, Check, X } from 'lucide-react';
+import { Lock, Upload, Trash2, Download, Check, X } from 'lucide-react';
 
 const ADMIN_PASSWORD = 'halilhoca...com';
 
