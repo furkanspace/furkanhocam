@@ -231,7 +231,7 @@ function GameContainer() {
                     )}
 
                     <button
-                        onClick={() => { logout(); setStatus('LANDING'); }}
+                        onClick={() => { logout(); navigate('/login'); }}
                         style={{
                             background: 'rgba(239, 68, 68, 0.2)',
                             color: '#ef4444',
