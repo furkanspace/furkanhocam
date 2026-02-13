@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard, BookOpen, Trophy, GraduationCap,
-    User, Shield, LogOut, Menu, X, ChevronRight
+    User, Shield, LogOut, Menu, X, ChevronRight, Zap, Database
 } from 'lucide-react';
 
 const Sidebar = ({ currentPage, onNavigate }) => {
@@ -15,12 +15,16 @@ const Sidebar = ({ currentPage, onNavigate }) => {
 
     const navItems = [
         { id: 'HOME', label: 'Ana Sayfa', icon: <LayoutDashboard size={22} />, always: true },
+        { id: 'DAILY_QUIZ', label: 'Günlük Quiz', icon: <Zap size={22} />, sub: 'Soru & Sıralama', always: true },
         { id: 'ARENA', label: 'Arena', icon: <Trophy size={22} />, sub: 'Turnuvalar', always: true },
         { id: 'STUDY', label: 'Kütüphane', icon: <BookOpen size={22} />, sub: 'Dersler', always: true },
         { id: 'STUDENT_PANEL', label: 'Eğitim', icon: <GraduationCap size={22} />, sub: 'Takip & Sorular', always: true },
         { id: 'PROFILE', label: 'Profil', icon: <User size={22} />, sub: 'Başarılar', always: true },
     ];
 
+    if (isAdmin || user?.role === 'staff') {
+        navItems.push({ id: 'QUIZ_BANK', label: 'Soru Bankası', icon: <Database size={22} />, sub: 'Soru Yönetimi', always: false });
+    }
     if (isAdmin) {
         navItems.push({ id: 'USER_MANAGEMENT', label: 'Yönetim', icon: <Shield size={22} />, sub: 'Admin Paneli', always: false });
     }

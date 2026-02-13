@@ -31,6 +31,7 @@ app.use('/api/files', require('./routes/files'));
 app.use('/api/lessons', require('./routes/lessons'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/questions', require('./routes/questions'));
+app.use('/api/quiz', require('./routes/quizQuestions'));
 
 // Handle SPA (React) routing - Return index.html for any other request
 app.get('*', (req, res) => {

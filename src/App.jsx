@@ -16,6 +16,8 @@ import MatchView from './components/MatchView';
 import UserManagement from './components/UserManagement';
 import StudentPanel from './components/StudentPanel';
 import ProfilePage from './components/ProfilePage';
+import QuizBankPage from './components/QuizBankPage';
+import DailyQuizPage from './components/DailyQuizPage';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
@@ -299,6 +301,22 @@ function GameContainer() {
                     {currentPage === 'STUDENT_PANEL' && (
                         <StudentPanel
                             key="student-panel"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* DAILY QUIZ */}
+                    {currentPage === 'DAILY_QUIZ' && (
+                        <DailyQuizPage
+                            key="daily-quiz"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* QUIZ BANK (Admin/Staff) */}
+                    {currentPage === 'QUIZ_BANK' && (user?.role === 'admin' || user?.role === 'staff') && (
+                        <QuizBankPage
+                            key="quiz-bank"
                             onBack={() => handleNavigate('HOME')}
                         />
                     )}

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import {
     LayoutDashboard, BookOpen, Trophy, GraduationCap,
     User, Clock, TrendingUp, Target, CheckCircle2,
-    Calendar, Star, Flame
+    Calendar, Star, Flame, Zap
 } from 'lucide-react';
 
 const API_BASE = import.meta.env.PROD ? '' : 'http://localhost:5001';
@@ -103,6 +103,11 @@ const HomePage = ({ onNavigate }) => {
                 <motion.div className="home-section glass-panel" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
                     <h2><Flame size={20} /> Hızlı Erişim</h2>
                     <div className="home-actions">
+                        <button className="home-action-btn home-action-quiz" onClick={() => onNavigate('DAILY_QUIZ')}>
+                            <Zap size={28} />
+                            <span>Quiz</span>
+                            <small>Günlük Quiz</small>
+                        </button>
                         <button className="home-action-btn home-action-arena" onClick={() => onNavigate('ARENA')}>
                             <Trophy size={28} />
                             <span>Arena</span>
@@ -154,10 +159,15 @@ const HomePage = ({ onNavigate }) => {
                 </motion.div>
             </div>
 
-            {/* Motivational Banner */}
-            <motion.div className="home-banner" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                <Star size={24} />
-                <p>Her gün bir adım daha! Düzenli çalışma başarının anahtarıdır. 🚀</p>
+            {/* Daily Quiz Banner */}
+            <motion.div className="home-quiz-banner" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}
+                onClick={() => onNavigate('DAILY_QUIZ')} style={{ cursor: 'pointer' }}>
+                <Zap size={24} />
+                <div>
+                    <strong>Günlük Quiz</strong>
+                    <p>Bugünkü 10 soruyu çöz, XP kazan, seriyi koru! ⚡</p>
+                </div>
+                <span className="home-quiz-go">Başla →</span>
             </motion.div>
         </div>
     );
