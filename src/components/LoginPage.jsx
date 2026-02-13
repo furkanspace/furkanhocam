@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogIn, User, Lock, ArrowRight } from 'lucide-react';
+import { LogIn, User, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+import BackgroundIcons from './BackgroundIcons';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -29,17 +30,37 @@ const LoginPage = () => {
 
     return (
         <div className="auth-page">
+            <BackgroundIcons theme="mixed" />
+
             <motion.div
-                className="auth-card glass-panel"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                className="auth-card"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
             >
                 <div className="auth-header">
-                    <div className="auth-icon-wrapper">
+                    <motion.div
+                        className="auth-icon-wrapper"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                    >
                         <LogIn size={32} />
-                    </div>
-                    <h2>Giriş Yap</h2>
-                    <p>Hesabınıza erişmek için bilgilerinizi girin</p>
+                    </motion.div>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                    >
+                        Giriş Yap
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                    >
+                        Score Board hesabınıza erişin
+                    </motion.p>
                 </div>
 
                 {error && (
@@ -48,13 +69,18 @@ const LoginPage = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                     >
-                        {error}
+                        <AlertCircle size={18} /> {error}
                     </motion.div>
                 )}
 
                 <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <User size={18} className="input-icon" />
+                    <motion.div
+                        className="form-group"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 }}
+                    >
+                        <User size={20} className="input-icon" />
                         <input
                             type="text"
                             placeholder="Kullanıcı Adı"
@@ -62,10 +88,15 @@ const LoginPage = () => {
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="form-group">
-                        <Lock size={18} className="input-icon" />
+                    <motion.div
+                        className="form-group"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.6 }}
+                    >
+                        <Lock size={20} className="input-icon" />
                         <input
                             type="password"
                             placeholder="Şifre"
@@ -73,16 +104,30 @@ const LoginPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <button type="submit" className="btn-auth-submit" disabled={isLoading}>
-                        {isLoading ? 'Giriş Yapılıyor...' : 'Giriş Yap'} <ArrowRight size={18} />
-                    </button>
+                    <motion.button
+                        type="submit"
+                        className="btn-auth-submit"
+                        disabled={isLoading}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                    >
+                        {isLoading ? 'Giriş Yapılıyor...' : 'Giriş Yap'} <ArrowRight size={20} />
+                    </motion.button>
                 </form>
 
-                <div className="auth-footer">
-                    <p>Hesabınız yok mu? <Link to="/register">Kayıt Ol</Link></p>
-                </div>
+                <motion.div
+                    className="auth-footer"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                >
+                    <p>Hesabınız yok mu? <Link to="/register">Hemen Kayıt Ol</Link></p>
+                </motion.div>
             </motion.div>
         </div>
     );

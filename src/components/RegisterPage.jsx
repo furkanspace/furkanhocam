@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { UserPlus, User, Lock, ArrowRight, Type } from 'lucide-react';
+import { UserPlus, User, Lock, ArrowRight, Type, AlertCircle } from 'lucide-react';
+import BackgroundIcons from './BackgroundIcons';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -38,17 +39,38 @@ const RegisterPage = () => {
 
     return (
         <div className="auth-page">
+            <BackgroundIcons theme="study" />
+
             <motion.div
-                className="auth-card glass-panel"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                className="auth-card"
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
             >
                 <div className="auth-header">
-                    <div className="auth-icon-wrapper" style={{ borderColor: '#00ff88', color: '#00ff88' }}>
+                    <motion.div
+                        className="auth-icon-wrapper"
+                        style={{ color: '#3b82f6', boxShadow: '0 0 20px rgba(59, 130, 246, 0.1)' }}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                    >
                         <UserPlus size={32} />
-                    </div>
-                    <h2>Kayıt Ol</h2>
-                    <p>Yeni bir hesap oluşturun</p>
+                    </motion.div>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                    >
+                        Kayıt Ol
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                    >
+                        Aramıza katılın ve öğrenmeye başlayın
+                    </motion.p>
                 </div>
 
                 {error && (
@@ -57,13 +79,18 @@ const RegisterPage = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                     >
-                        {error}
+                        <AlertCircle size={18} /> {error}
                     </motion.div>
                 )}
 
                 <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <Type size={18} className="input-icon" />
+                    <motion.div
+                        className="form-group"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 }}
+                    >
+                        <Type size={20} className="input-icon" />
                         <input
                             type="text"
                             name="fullName"
@@ -72,10 +99,15 @@ const RegisterPage = () => {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="form-group">
-                        <User size={18} className="input-icon" />
+                    <motion.div
+                        className="form-group"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.6 }}
+                    >
+                        <User size={20} className="input-icon" />
                         <input
                             type="text"
                             name="username"
@@ -84,10 +116,15 @@ const RegisterPage = () => {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="form-group">
-                        <Lock size={18} className="input-icon" />
+                    <motion.div
+                        className="form-group"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.7 }}
+                    >
+                        <Lock size={20} className="input-icon" />
                         <input
                             type="password"
                             name="password"
@@ -96,25 +133,48 @@ const RegisterPage = () => {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="form-group">
-                        <label style={{ display: 'block', marginBottom: '5px', color: '#888', fontSize: '0.9rem' }}>Rol Seçin:</label>
-                        <select name="role" value={formData.role} onChange={handleChange} className="auth-select">
+                    <motion.div
+                        className="form-group"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.8 }}
+                    >
+                        <select
+                            name="role"
+                            value={formData.role}
+                            onChange={handleChange}
+                            className="auth-select"
+                        >
                             <option value="student">Öğrenci</option>
                             <option value="parent">Veli</option>
                             <option value="staff">Personel</option>
                         </select>
-                    </div>
+                    </motion.div>
 
-                    <button type="submit" className="btn-auth-submit btn-register" disabled={isLoading}>
-                        {isLoading ? 'Kaydediliyor...' : 'Kayıt Ol'} <ArrowRight size={18} />
-                    </button>
+                    <motion.button
+                        type="submit"
+                        className="btn-auth-submit btn-register"
+                        disabled={isLoading}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9 }}
+                    >
+                        {isLoading ? 'Kaydediliyor...' : 'Kayıt Ol'} <ArrowRight size={20} />
+                    </motion.button>
                 </form>
 
-                <div className="auth-footer">
+                <motion.div
+                    className="auth-footer"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.0 }}
+                >
                     <p>Zaten hesabınız var mı? <Link to="/login">Giriş Yap</Link></p>
-                </div>
+                </motion.div>
             </motion.div>
         </div>
     );
