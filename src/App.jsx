@@ -11,11 +11,12 @@ import Setup from './components/Setup';
 import DrawCeremony from './components/DrawCeremony';
 import Dashboard from './components/Dashboard';
 import MatchView from './components/MatchView';
+import UserManagement from './components/UserManagement';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
 function GameContainer() {
-    const [status, setStatus] = useState('LANDING'); // LANDING, SETUP, DRAW, DASHBOARD, MATCH
+    const [status, setStatus] = useState('LANDING'); // LANDING, SETUP, DRAW, DASHBOARD, MATCH, USER_MANAGEMENT
     const [teams, setTeams] = useState([]);
     const [mode, setMode] = useState('LEAGUE');
     const [tournamentName, setTournamentName] = useState('');
@@ -206,6 +207,29 @@ function GameContainer() {
                     }}>
                         👤 {user.fullName} <span style={{ opacity: 0.6, fontSize: '0.8rem' }}>({user.role})</span>
                     </span>
+
+                    {user.role === 'admin' && (
+                        <button
+                            onClick={() => setStatus('USER_MANAGEMENT')}
+                            style={{
+                                background: 'rgba(59, 130, 246, 0.2)',
+                                color: '#3b82f6',
+                                padding: '8px 15px',
+                                borderRadius: '20px',
+                                border: '1px solid rgba(59, 130, 246, 0.3)',
+                                cursor: 'pointer',
+                                fontWeight: 'bold',
+                                fontSize: '0.9rem',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '5px'
+                            }}
+                        >
+                            🛡️ Yönetim Paneli
+                        </button>
+                    )}
+
                     <button
                         onClick={() => { logout(); setStatus('LANDING'); }}
                         style={{
@@ -338,6 +362,12 @@ function GameContainer() {
                         match={activeMatch}
                         onFinish={handleMatchFinish}
                         onBack={() => setStatus('DASHBOARD')}
+                    />
+                )}
+                {status === 'USER_MANAGEMENT' && user?.role === 'admin' && (
+                    <UserManagement
+                        key="user-management"
+                        onBack={() => setStatus('LANDING')}
                     />
                 )}
             </AnimatePresence>
