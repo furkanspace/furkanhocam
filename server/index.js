@@ -25,6 +25,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/score_boa
 app.use(express.static(path.join(__dirname, 'public/dist')));
 
 // API Routes
+app.use('/api/auth', require('./routes/auth'));
 app.use('/api/tournaments', require('./routes/tournaments'));
 app.use('/api/files', require('./routes/files'));
 

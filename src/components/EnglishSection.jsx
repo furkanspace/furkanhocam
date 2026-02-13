@@ -113,22 +113,17 @@ const categories = [
     }
 ];
 
+import { useAuth } from '../context/AuthContext';
 import { getFiles, uploadFile, deleteFile } from '../api';
-import { Lock, Upload, Trash2, Download, Check, X } from 'lucide-react';
-
-const ADMIN_PASSWORD = 'halilhoca...com';
+import { Lock, Upload, Trash2, Download, Check, X, FileText } from 'lucide-react';
 
 const EnglishSection = ({ onBack }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [passwordInput, setPasswordInput] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
-    const [pendingAction, setPendingAction] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const { user } = useAuth(); // Get user from context
 
     // Helpers
     const getPath = (category, subcategory) => {
@@ -138,7 +133,6 @@ const EnglishSection = ({ onBack }) => {
         // Special cases if needed, matching the folder structure created
         if (catId === 'ielts-toefl') subName = subcategory.name.toLowerCase().replace(/\s+/g, '-');
         if (catId === 'yds') subName = subcategory.name.toLowerCase().replace(/\s+/g, '');
-        if (catId === 'yokdil') subName = 'yokmil' + subcategory.name.toLowerCase(); // Wait, folder was yokdilfen etc?
         // Let's check folders created: yokdilfen, yokdilsaglik, yokdilsosyal
         if (catId === 'yokdil') subName = 'yokdil' + subcategory.name.toLowerCase();
 
@@ -178,28 +172,9 @@ const EnglishSection = ({ onBack }) => {
             setFiles([]);
         } else if (selectedCategory) {
             setSelectedCategory(null);
+            onBack(); // Ensure EnglishSection resets correctly or parent handles it
         } else {
             onBack();
-        }
-    };
-
-    // Auth & Actions
-    const requestAuth = (action) => {
-        if (isAuthenticated) {
-            action();
-        } else {
-            setPendingAction(() => action);
-            setShowPasswordModal(true);
-        }
-    };
-
-    const handlePasswordSubmit = () => {
-        if (passwordInput === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-            setShowPasswordModal(false);
-            if (pendingAction) pendingAction();
-        } else {
-            setPasswordError(true);
         }
     };
 
@@ -232,6 +207,8 @@ const EnglishSection = ({ onBack }) => {
         }
     };
 
+    const canManageFiles = user && user.role === 'admin';
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -239,33 +216,6 @@ const EnglishSection = ({ onBack }) => {
             exit={{ opacity: 0 }}
             className="english-section-page"
         >
-            {/* Password Modal */}
-            {showPasswordModal && (
-                <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
-                    <div className="modal-content glass-panel" onClick={e => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <Lock size={24} className="modal-icon" />
-                            <h3>Yönetici Girişi</h3>
-                        </div>
-                        <p>Dosya yüklemek/silmek için şifre girin:</p>
-                        <input
-                            type="password"
-                            value={passwordInput}
-                            onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
-                            onKeyDown={(e) => e.key === 'Enter' && handlePasswordSubmit()}
-                            placeholder="Şifre"
-                            className={`password-input ${passwordError ? 'error' : ''}`}
-                            autoFocus
-                        />
-                        {passwordError && <span className="error-text">Yanlış şifre!</span>}
-                        <div className="modal-buttons">
-                            <button onClick={() => setShowPasswordModal(false)} className="btn-cancel">İptal</button>
-                            <button onClick={handlePasswordSubmit} className="btn-confirm">Giriş Yap</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* Header */}
             <div className="english-header">
                 <button onClick={handleBackClick} className="btn-back-english">
@@ -356,20 +306,24 @@ const EnglishSection = ({ onBack }) => {
                         >
                             {/* Toolbar */}
                             <div className="files-toolbar">
-                                <h3>Dosyalar</h3>
-                                <button
-                                    className="btn-upload"
-                                    onClick={() => requestAuth(() => document.getElementById('file-upload').click())}
-                                >
-                                    <Upload size={18} /> Dosya Yükle
-                                </button>
-                                <input
-                                    type="file"
-                                    id="file-upload"
-                                    style={{ display: 'none' }}
-                                    onChange={handleUpload}
-                                    disabled={uploading}
-                                />
+                                <h3>Dosyalar: {selectedSubcategory.name}</h3>
+                                {canManageFiles && (
+                                    <>
+                                        <button
+                                            className="btn-upload"
+                                            onClick={() => document.getElementById('file-upload').click()}
+                                        >
+                                            <Upload size={18} /> Dosya Yükle
+                                        </button>
+                                        <input
+                                            type="file"
+                                            id="file-upload"
+                                            style={{ display: 'none' }}
+                                            onChange={handleUpload}
+                                            disabled={uploading}
+                                        />
+                                    </>
+                                )}
                             </div>
 
                             {loading ? (
@@ -401,13 +355,15 @@ const EnglishSection = ({ onBack }) => {
                                                     target="_blank"
                                                     download
                                                     className="btn-download"
+                                                    title="İndir"
                                                 >
                                                     <Download size={18} />
                                                 </a>
-                                                {isAuthenticated && (
+                                                {canManageFiles && (
                                                     <button
                                                         className="btn-delete"
                                                         onClick={() => handleDelete(file.name)}
+                                                        title="Sil"
                                                     >
                                                         <Trash2 size={18} />
                                                     </button>
