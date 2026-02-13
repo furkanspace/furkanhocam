@@ -5,6 +5,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import LandingPage from './components/LandingPage';
+import Sidebar from './components/Sidebar';
+import HomePage from './components/HomePage';
 import StudySection from './components/StudySection';
 import EnglishSection from './components/EnglishSection';
 import Setup from './components/Setup';
@@ -13,11 +15,18 @@ import Dashboard from './components/Dashboard';
 import MatchView from './components/MatchView';
 import UserManagement from './components/UserManagement';
 import StudentPanel from './components/StudentPanel';
+import ProfilePage from './components/ProfilePage';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
 function GameContainer() {
-    const [status, setStatus] = useState('LANDING'); // LANDING, SETUP, DRAW, DASHBOARD, MATCH, USER_MANAGEMENT
+    // Page hierarchy:
+    // HOME (dashboard), ARENA (→SETUP/DRAW/DASHBOARD/MATCH), STUDY (→ENGLISH), STUDENT_PANEL, PROFILE, USER_MANAGEMENT
+    const [currentPage, setCurrentPage] = useState('HOME');
+    // Tournament sub-states
+    const [arenaStatus, setArenaStatus] = useState('SETUP'); // SETUP, DRAW, DASHBOARD, MATCH
+    const [studyStatus, setStudyStatus] = useState('SUBJECTS'); // SUBJECTS, ENGLISH
+
     const [teams, setTeams] = useState([]);
     const [mode, setMode] = useState('LEAGUE');
     const [tournamentName, setTournamentName] = useState('');
@@ -31,7 +40,6 @@ function GameContainer() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
-    // Load saved tournaments from API
     useEffect(() => {
         const fetchTournaments = async () => {
             try {
@@ -47,7 +55,6 @@ function GameContainer() {
         fetchTournaments();
     }, []);
 
-    // Save current tournament state (Create or Update)
     const saveTournament = async (teamsData, modeData, fixturesData, resultsData, name, status = 'DASHBOARD', winner = null) => {
         const tournamentData = {
             name: name || tournamentName || `Turnuva ${new Date().toLocaleDateString('tr-TR')}`,
@@ -58,19 +65,14 @@ function GameContainer() {
             status: status,
             winner: winner
         };
-
         try {
             if (currentTournamentId) {
-                // Update existing
                 await updateTournament(currentTournamentId, tournamentData);
-
-                // Refresh list locally to reflect changes immediately (optimistic update or re-fetch)
                 const updatedActive = activeTournaments.map(t =>
                     t._id === currentTournamentId ? { ...t, ...tournamentData } : t
                 );
                 setActiveTournaments(updatedActive);
             } else {
-                // Create new
                 const newTournament = await createTournament(tournamentData);
                 setCurrentTournamentId(newTournament._id);
                 setActiveTournaments([...activeTournaments, newTournament]);
@@ -80,14 +82,9 @@ function GameContainer() {
         }
     };
 
-    // Complete a tournament with a winner
     const completeTournament = async (winner) => {
         if (!currentTournamentId) return;
-
-        // Save final state with winner and COMPLETED status
         await saveTournament(teams, mode, fixtures, results, tournamentName, 'COMPLETED', winner);
-
-        // Move from active to completed in local state
         const tournament = activeTournaments.find(t => t._id === currentTournamentId);
         if (tournament) {
             const completedTournament = { ...tournament, status: 'COMPLETED', winner };
@@ -132,28 +129,26 @@ function GameContainer() {
         setTournamentName(name);
         setResults({});
         setCurrentTournamentId(null);
-        setStatus('DRAW');
+        setArenaStatus('DRAW');
     };
 
     const handleDrawComplete = (generatedFixtures) => {
         setFixtures(generatedFixtures);
         saveTournament(teams, mode, generatedFixtures, {}, tournamentName);
-        setStatus('DASHBOARD');
+        setArenaStatus('DASHBOARD');
     };
 
     const handleStartMatch = (match) => {
-        if (match.away === 'BYE') {
-            return;
-        }
+        if (match.away === 'BYE') return;
         setActiveMatch(match);
-        setStatus('MATCH');
+        setArenaStatus('MATCH');
     };
 
     const handleMatchFinish = (matchId, result) => {
         const newResults = { ...results, [matchId]: result };
         setResults(newResults);
         saveTournament(teams, mode, fixtures, newResults, tournamentName);
-        setStatus('DASHBOARD');
+        setArenaStatus('DASHBOARD');
         setActiveMatch(null);
     };
 
@@ -163,20 +158,20 @@ function GameContainer() {
         setTournamentName(tournament.name);
         setFixtures(tournament.fixtures);
         setResults(tournament.results);
-        setCurrentTournamentId(tournament._id); // Use _id from MongoDB
-        setStatus('DASHBOARD');
+        setCurrentTournamentId(tournament._id);
+        setArenaStatus('DASHBOARD');
     };
 
     const handleGoHome = () => {
         if (fixtures.length > 0) {
             saveTournament(teams, mode, fixtures, results, tournamentName);
         }
-        setStatus('SETUP');
+        setArenaStatus('SETUP');
     };
 
     const handleCompleteTournament = (winner) => {
         completeTournament(winner);
-        setStatus('SETUP');
+        setArenaStatus('SETUP');
     };
 
     const handleUpdateTournamentName = (newName) => {
@@ -184,220 +179,147 @@ function GameContainer() {
         saveTournament(teams, mode, fixtures, results, newName);
     };
 
-    return (
-        <div style={{ minHeight: '100vh', width: '100%', position: 'relative' }}>
-            {/* User Info Header */}
-            {user ? (
+    const handleNavigate = (page) => {
+        setCurrentPage(page);
+        // Reset sub-states when navigating
+        if (page === 'ARENA') setArenaStatus('SETUP');
+        if (page === 'STUDY') setStudyStatus('SUBJECTS');
+    };
+
+    // If user is not logged in, show landing
+    if (!user) {
+        return (
+            <div style={{ minHeight: '100vh', width: '100%', position: 'relative' }}>
                 <div style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
-                    zIndex: 1000,
-                    display: 'flex',
-                    gap: '10px',
-                    alignItems: 'center'
+                    position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000,
+                    display: 'flex', gap: '1rem'
                 }}>
-                    <span style={{
-                        color: 'white',
-                        background: 'rgba(0,0,0,0.6)',
-                        padding: '8px 15px',
-                        borderRadius: '20px',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        fontSize: '0.9rem',
-                        backdropFilter: 'blur(5px)'
-                    }}>
-                        👤 {user.fullName} <span style={{ opacity: 0.6, fontSize: '0.8rem' }}>({user.role})</span>
-                    </span>
+                    <button onClick={() => navigate('/login')} style={{
+                        color: '#00ff88', background: 'rgba(0, 255, 136, 0.1)',
+                        border: '1px solid rgba(0, 255, 136, 0.3)', padding: '8px 20px',
+                        borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold'
+                    }}>Giriş Yap</button>
+                    <button onClick={() => navigate('/register')} style={{
+                        color: '#00b8ff', background: 'rgba(0, 184, 255, 0.1)',
+                        border: '1px solid rgba(0, 184, 255, 0.3)', padding: '8px 20px',
+                        borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold'
+                    }}>Kayıt Ol</button>
+                </div>
+                <LandingPage
+                    onEnterGame={() => navigate('/login')}
+                    onEnterStudy={() => navigate('/login')}
+                />
+            </div>
+        );
+    }
 
-                    <button
-                        onClick={() => setStatus('STUDENT_PANEL')}
-                        style={{
-                            background: 'rgba(59, 130, 246, 0.2)',
-                            color: '#3b82f6',
-                            padding: '8px 15px',
-                            borderRadius: '20px',
-                            border: '1px solid rgba(59, 130, 246, 0.3)',
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            fontSize: '0.9rem',
-                            transition: 'all 0.2s',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px'
-                        }}
-                    >
-                        📚 Ders Takip
-                    </button>
-
-                    {user.role === 'admin' && (
-                        <button
-                            onClick={() => setStatus('USER_MANAGEMENT')}
-                            style={{
-                                background: 'rgba(59, 130, 246, 0.2)',
-                                color: '#3b82f6',
-                                padding: '8px 15px',
-                                borderRadius: '20px',
-                                border: '1px solid rgba(59, 130, 246, 0.3)',
-                                cursor: 'pointer',
-                                fontWeight: 'bold',
-                                fontSize: '0.9rem',
-                                transition: 'all 0.2s',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '5px'
-                            }}
-                        >
-                            🛡️ Yönetim Paneli
-                        </button>
+    // Logged in: sidebar + content
+    return (
+        <div className="app-layout">
+            <Sidebar currentPage={currentPage} onNavigate={handleNavigate} />
+            <main className="app-content">
+                <AnimatePresence mode="wait">
+                    {/* HOME */}
+                    {currentPage === 'HOME' && (
+                        <HomePage key="home" onNavigate={handleNavigate} />
                     )}
 
-                    <button
-                        onClick={() => { logout(); navigate('/login'); }}
-                        style={{
-                            background: 'rgba(239, 68, 68, 0.2)',
-                            color: '#ef4444',
-                            padding: '8px 15px',
-                            borderRadius: '20px',
-                            border: '1px solid rgba(239, 68, 68, 0.3)',
-                            cursor: 'pointer',
-                            fontWeight: 'bold',
-                            fontSize: '0.9rem',
-                            transition: 'all 0.2s'
-                        }}
-                    >
-                        Çıkış
-                    </button>
-                </div>
-            ) : (
-                status === 'LANDING' && (
-                    <div style={{
-                        position: 'absolute',
-                        top: '1rem',
-                        right: '1rem',
-                        zIndex: 1000,
-                        display: 'flex',
-                        gap: '1rem'
-                    }}>
-                        <button
-                            onClick={() => navigate('/login')}
-                            style={{
-                                color: '#00ff88',
-                                background: 'rgba(0, 255, 136, 0.1)',
-                                border: '1px solid rgba(0, 255, 136, 0.3)',
-                                padding: '8px 20px',
-                                borderRadius: '20px',
-                                cursor: 'pointer',
-                                fontWeight: 'bold'
+                    {/* ARENA (Tournament System) */}
+                    {currentPage === 'ARENA' && arenaStatus === 'SETUP' && (
+                        <Setup
+                            key="setup"
+                            onStart={handleStartTournament}
+                            activeTournaments={activeTournaments}
+                            onResumeTournament={handleResumeTournament}
+                            onDeleteTournament={handleDeleteTournament}
+                            completedTournaments={completedTournaments}
+                            onDeleteTrophy={handleDeleteTrophy}
+                            onEditTrophy={handleEditTrophy}
+                            onBackToLanding={() => handleNavigate('HOME')}
+                        />
+                    )}
+                    {currentPage === 'ARENA' && arenaStatus === 'DRAW' && (
+                        <DrawCeremony
+                            key="draw"
+                            teams={teams}
+                            mode={mode}
+                            onComplete={handleDrawComplete}
+                        />
+                    )}
+                    {currentPage === 'ARENA' && arenaStatus === 'DASHBOARD' && (
+                        <Dashboard
+                            key="dashboard"
+                            teams={teams}
+                            fixtures={fixtures}
+                            results={results}
+                            mode={mode}
+                            tournamentName={tournamentName}
+                            onStartMatch={handleStartMatch}
+                            onGoHome={handleGoHome}
+                            onUpdateResult={(matchId, result) => {
+                                const newResults = { ...results, [matchId]: result };
+                                setResults(newResults);
+                                saveTournament(teams, mode, fixtures, newResults, tournamentName);
                             }}
-                        >
-                            Giriş Yap
-                        </button>
-                        <button
-                            onClick={() => navigate('/register')}
-                            style={{
-                                color: '#00b8ff',
-                                background: 'rgba(0, 184, 255, 0.1)',
-                                border: '1px solid rgba(0, 184, 255, 0.3)',
-                                padding: '8px 20px',
-                                borderRadius: '20px',
-                                cursor: 'pointer',
-                                fontWeight: 'bold'
-                            }}
-                        >
-                            Kayıt Ol
-                        </button>
-                    </div>
-                )
-            )}
+                            onCompleteTournament={handleCompleteTournament}
+                            onUpdateTournamentName={handleUpdateTournamentName}
+                        />
+                    )}
+                    {currentPage === 'ARENA' && arenaStatus === 'MATCH' && (
+                        <MatchView
+                            key="match"
+                            match={activeMatch}
+                            onFinish={handleMatchFinish}
+                            onBack={() => setArenaStatus('DASHBOARD')}
+                        />
+                    )}
 
-            <AnimatePresence mode="wait">
-                {status === 'LANDING' && (
-                    <LandingPage
-                        key="landing"
-                        onEnterGame={() => setStatus('SETUP')}
-                        onEnterStudy={() => setStatus('STUDY')}
-                    />
-                )}
-                {status === 'STUDY' && (
-                    <StudySection
-                        key="study"
-                        onBack={() => setStatus('LANDING')}
-                        onSelectSubject={(subject) => {
-                            if (subject.id === 'english') {
-                                setStatus('ENGLISH');
-                            } else {
-                                alert(`${subject.name} yakında aktif olacak!`);
-                            }
-                        }}
-                    />
-                )}
-                {status === 'ENGLISH' && (
-                    <EnglishSection
-                        key="english"
-                        onBack={() => setStatus('STUDY')}
-                    />
-                )}
-                {status === 'SETUP' && (
-                    <Setup
-                        key="setup"
-                        onStart={handleStartTournament}
-                        activeTournaments={activeTournaments}
-                        onResumeTournament={handleResumeTournament}
-                        onDeleteTournament={handleDeleteTournament}
-                        completedTournaments={completedTournaments}
-                        onDeleteTrophy={handleDeleteTrophy}
-                        onEditTrophy={handleEditTrophy}
-                        onBackToLanding={() => setStatus('LANDING')}
-                    />
-                )}
-                {status === 'DRAW' && (
-                    <DrawCeremony
-                        key="draw"
-                        teams={teams}
-                        mode={mode}
-                        onComplete={handleDrawComplete}
-                    />
-                )}
-                {status === 'DASHBOARD' && (
-                    <Dashboard
-                        key="dashboard"
-                        teams={teams}
-                        fixtures={fixtures}
-                        results={results}
-                        mode={mode}
-                        tournamentName={tournamentName}
-                        onStartMatch={handleStartMatch}
-                        onGoHome={handleGoHome}
-                        onUpdateResult={(matchId, result) => {
-                            const newResults = { ...results, [matchId]: result };
-                            setResults(newResults);
-                            saveTournament(teams, mode, fixtures, newResults, tournamentName);
-                        }}
-                        onCompleteTournament={handleCompleteTournament}
-                        onUpdateTournamentName={handleUpdateTournamentName}
-                    />
-                )}
-                {status === 'MATCH' && (
-                    <MatchView
-                        key="match"
-                        match={activeMatch}
-                        onFinish={handleMatchFinish}
-                        onBack={() => setStatus('DASHBOARD')}
-                    />
-                )}
-                {status === 'USER_MANAGEMENT' && user?.role === 'admin' && (
-                    <UserManagement
-                        key="user-management"
-                        onBack={() => setStatus('LANDING')}
-                    />
-                )}
-                {status === 'STUDENT_PANEL' && (
-                    <StudentPanel
-                        key="student-panel"
-                        onBack={() => setStatus('LANDING')}
-                    />
-                )}
-            </AnimatePresence>
+                    {/* STUDY (Kütüphane) */}
+                    {currentPage === 'STUDY' && studyStatus === 'SUBJECTS' && (
+                        <StudySection
+                            key="study"
+                            onBack={() => handleNavigate('HOME')}
+                            onSelectSubject={(subject) => {
+                                if (subject.id === 'english') {
+                                    setStudyStatus('ENGLISH');
+                                } else {
+                                    alert(`${subject.name} yakında aktif olacak!`);
+                                }
+                            }}
+                        />
+                    )}
+                    {currentPage === 'STUDY' && studyStatus === 'ENGLISH' && (
+                        <EnglishSection
+                            key="english"
+                            onBack={() => setStudyStatus('SUBJECTS')}
+                        />
+                    )}
+
+                    {/* STUDENT PANEL (Eğitim) */}
+                    {currentPage === 'STUDENT_PANEL' && (
+                        <StudentPanel
+                            key="student-panel"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* PROFILE */}
+                    {currentPage === 'PROFILE' && (
+                        <ProfilePage
+                            key="profile"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* USER MANAGEMENT */}
+                    {currentPage === 'USER_MANAGEMENT' && user?.role === 'admin' && (
+                        <UserManagement
+                            key="user-management"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+                </AnimatePresence>
+            </main>
         </div>
     );
 };
