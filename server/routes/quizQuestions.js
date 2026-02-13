@@ -68,7 +68,7 @@ router.post('/questions', verifyToken, checkRole(['admin', 'staff']), async (req
             type: type || 'multiple_choice',
             questionText, options, correctAnswer,
             explanation: explanation || '',
-            createdBy: req.user.id
+            createdBy: req.user._id
         });
         await question.save();
         const populated = await QuizQuestion.findById(question._id).populate('createdBy', 'fullName');
@@ -110,7 +110,7 @@ router.get('/daily', verifyToken, async (req, res) => {
         const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
         // Check if already completed today
-        const existing = await QuizAttempt.findOne({ student: req.user.id, date: today });
+        const existing = await QuizAttempt.findOne({ student: req.user._id, date: today });
         if (existing) {
             // Return completed attempt with populated questions
             const populated = await QuizAttempt.findById(existing._id)
@@ -148,7 +148,7 @@ router.post('/daily/submit', verifyToken, async (req, res) => {
         const { answers } = req.body; // [{questionId, selectedAnswer, timeSpent}]
 
         // Already completed?
-        const existing = await QuizAttempt.findOne({ student: req.user.id, date: today });
+        const existing = await QuizAttempt.findOne({ student: req.user._id, date: today });
         if (existing) {
             return res.status(400).json({ message: 'Bugün zaten quiz çözdünüz' });
         }
@@ -180,7 +180,7 @@ router.post('/daily/submit', verifyToken, async (req, res) => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toISOString().split('T')[0];
-        const yesterdayAttempt = await QuizAttempt.findOne({ student: req.user.id, date: yesterdayStr });
+        const yesterdayAttempt = await QuizAttempt.findOne({ student: req.user._id, date: yesterdayStr });
         const streak = yesterdayAttempt ? (yesterdayAttempt.streak || 0) + 1 : 1;
 
         // XP calculation: base 5 per correct + streak bonus
@@ -189,7 +189,7 @@ router.post('/daily/submit', verifyToken, async (req, res) => {
         const xpEarned = baseXP + streakBonus;
 
         const attempt = new QuizAttempt({
-            student: req.user.id,
+            student: req.user._id,
             date: today,
             questions: gradedQuestions,
             score,
@@ -215,7 +215,7 @@ router.post('/daily/submit', verifyToken, async (req, res) => {
 // GET /api/quiz/history — Kendi quiz geçmişi
 router.get('/history', verifyToken, async (req, res) => {
     try {
-        const attempts = await QuizAttempt.find({ student: req.user.id })
+        const attempts = await QuizAttempt.find({ student: req.user._id })
             .sort({ date: -1 })
             .limit(30)
             .populate('questions.question', 'questionText subject topic');
@@ -290,7 +290,7 @@ router.get('/leaderboard', verifyToken, async (req, res) => {
 // GET /api/quiz/stats — Kendi genel istatistikleri
 router.get('/stats', verifyToken, async (req, res) => {
     try {
-        const attempts = await QuizAttempt.find({ student: req.user.id });
+        const attempts = await QuizAttempt.find({ student: req.user._id });
         const totalQuizzes = attempts.length;
         const totalCorrect = attempts.reduce((sum, a) => sum + a.score, 0);
         const totalQuestions = attempts.reduce((sum, a) => sum + a.totalQuestions, 0);

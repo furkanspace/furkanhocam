@@ -81,17 +81,23 @@ const QuizBankPage = ({ onBack }) => {
                 const res = await fetch(`${API_BASE}/api/quiz/questions/${editingQ._id}`, {
                     method: 'PUT', headers: headers(), body: JSON.stringify(body)
                 });
+                if (!res.ok) { const err = await res.json(); alert(err.message || 'Hata oluştu'); return; }
                 const updated = await res.json();
-                setQuestions(questions.map(q => q._id === editingQ._id ? updated : q));
+                if (updated && updated._id) {
+                    setQuestions(questions.map(q => q._id === editingQ._id ? updated : q));
+                }
             } else {
                 const res = await fetch(`${API_BASE}/api/quiz/questions`, {
                     method: 'POST', headers: headers(), body: JSON.stringify(body)
                 });
+                if (!res.ok) { const err = await res.json(); alert(err.message || 'Hata oluştu'); return; }
                 const newQ = await res.json();
-                setQuestions([newQ, ...questions]);
+                if (newQ && newQ._id) {
+                    setQuestions([newQ, ...questions]);
+                }
             }
             setShowModal(false);
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); alert('Bağlantı hatası'); }
     };
 
     const handleDelete = async (id) => {
@@ -178,7 +184,7 @@ const QuizBankPage = ({ onBack }) => {
                             </div>
                             <p className="qb-card-text">{q.questionText}</p>
                             <div className="qb-card-options">
-                                {q.options.map((opt, oi) => (
+                                {(q.options || []).map((opt, oi) => (
                                     <span key={oi} className={`qb-opt ${oi === q.correctAnswer ? 'qb-opt-correct' : ''}`}>
                                         {String.fromCharCode(65 + oi)}) {opt}
                                     </span>
