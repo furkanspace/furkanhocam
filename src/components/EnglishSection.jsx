@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, ChevronRight, GraduationCap, School, Building2, Globe, Award, FileText, ExternalLink } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, GraduationCap, School, Building2, Globe, Award, FileText, ExternalLink, Lock, Upload, Trash2, Download, Check, X } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { getFiles, uploadFile, deleteFile } from '../api';
 
 const categories = [
     {
@@ -112,10 +114,6 @@ const categories = [
         ]
     }
 ];
-
-import { useAuth } from '../context/AuthContext';
-import { getFiles, uploadFile, deleteFile } from '../api';
-import { Lock, Upload, Trash2, Download, Check, X, FileText } from 'lucide-react';
 
 const EnglishSection = ({ onBack }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
