@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public/dist')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/tournaments', require('./routes/tournaments'));
 app.use('/api/files', require('./routes/files'));
+app.use('/api/lessons', require('./routes/lessons'));
 
 // Handle SPA (React) routing - Return index.html for any other request
 app.get('*', (req, res) => {

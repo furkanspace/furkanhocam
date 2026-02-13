@@ -2805,3 +2805,504 @@ button:disabled {
     border: 2px dashed rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.5);
 }
+
+/* ============================================
+   STUDENT PANEL STYLES
+   ============================================ */
+
+.sp-page {
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(135deg, #0a1628 0%, #1a2a4a 50%, #0a1628 100%);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sp-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 900px;
+}
+
+.sp-btn-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.sp-btn-back:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.sp-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sp-title-icon {
+    color: #3b82f6;
+}
+
+.sp-title h1 {
+    font-size: 2.5rem;
+    color: white;
+    margin: 0;
+    font-family: var(--header-font);
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.sp-title p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Admin Controls */
+.sp-admin-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.sp-student-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.sp-student-select {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.sp-student-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.sp-btn-add {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.sp-btn-add:hover {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Add Form */
+.sp-add-form {
+    width: 100%;
+    max-width: 900px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.sp-add-form h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    margin: 0 0 1rem;
+}
+
+.sp-form-warning {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 204, 0, 0.1);
+    border: 1px solid rgba(255, 204, 0, 0.2);
+    color: #ffcc00;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.sp-form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sp-form-group {
+    flex: 1;
+    margin-bottom: 0.5rem;
+}
+
+.sp-form-group label {
+    display: block;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+}
+
+.sp-form-group select,
+.sp-form-group input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.sp-form-group select:focus,
+.sp-form-group input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.sp-form-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.sp-btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent);
+    color: black;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.sp-btn-cancel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+}
+
+/* Lessons Container */
+.sp-lessons-container {
+    width: 100%;
+    max-width: 900px;
+}
+
+.sp-loading,
+.sp-empty {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.sp-empty svg {
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+/* Week Group */
+.sp-week-group {
+    margin-bottom: 2rem;
+}
+
+.sp-week-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #3b82f6;
+    font-size: 1rem;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.sp-lesson-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Lesson Card */
+.sp-lesson-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 4px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    transition: all 0.2s;
+}
+
+.sp-lesson-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sp-card-completed {
+    border-left-color: #00ff88;
+    background: rgba(0, 255, 136, 0.03);
+}
+
+.sp-card-missed {
+    border-left-color: #ff4444;
+    background: rgba(255, 68, 68, 0.03);
+}
+
+.sp-card-makeup-done {
+    border-left-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.03);
+}
+
+.sp-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.sp-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.sp-card-subject {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.sp-card-date {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+.sp-card-student {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+}
+
+.sp-card-notes {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.8rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+/* Status Badges */
+.sp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.sp-badge-completed {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.sp-badge-missed {
+    background: rgba(255, 68, 68, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.sp-badge-makeup {
+    background: rgba(255, 204, 0, 0.15);
+    color: #ffcc00;
+    border: 1px solid rgba(255, 204, 0, 0.3);
+}
+
+.sp-badge-makeup-done {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.sp-badge-pending {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Card Actions */
+.sp-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sp-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.sp-action-complete {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.sp-action-complete:hover {
+    background: rgba(0, 255, 136, 0.2);
+}
+
+.sp-action-miss {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+.sp-action-miss:hover {
+    background: rgba(255, 68, 68, 0.2);
+}
+
+.sp-action-makeup {
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.sp-action-makeup:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.sp-action-delete {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-left: auto;
+}
+
+.sp-action-delete:hover {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff6b6b;
+}
+
+/* Makeup Modal */
+.sp-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.sp-modal {
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+}
+
+.sp-modal h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: white;
+    margin: 0 0 0.5rem;
+}
+
+.sp-modal p {
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 1rem;
+}
+
+.sp-modal-date {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sp-modal-date:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.sp-modal-actions {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+/* Mobile Student Panel */
+@media (max-width: 768px) {
+    .sp-page {
+        padding: 1rem;
+    }
+
+    .sp-title h1 {
+        font-size: 1.8rem;
+    }
+
+    .sp-admin-controls {
+        flex-direction: column;
+    }
+
+    .sp-form-row {
+        flex-direction: column;
+    }
+
+    .sp-card-top {
+        flex-direction: column;
+    }
+
+    .sp-card-actions {
+        flex-wrap: wrap;
+    }
+}

@@ -12,6 +12,7 @@ import DrawCeremony from './components/DrawCeremony';
 import Dashboard from './components/Dashboard';
 import MatchView from './components/MatchView';
 import UserManagement from './components/UserManagement';
+import StudentPanel from './components/StudentPanel';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
@@ -208,6 +209,26 @@ function GameContainer() {
                         👤 {user.fullName} <span style={{ opacity: 0.6, fontSize: '0.8rem' }}>({user.role})</span>
                     </span>
 
+                    <button
+                        onClick={() => setStatus('STUDENT_PANEL')}
+                        style={{
+                            background: 'rgba(59, 130, 246, 0.2)',
+                            color: '#3b82f6',
+                            padding: '8px 15px',
+                            borderRadius: '20px',
+                            border: '1px solid rgba(59, 130, 246, 0.3)',
+                            cursor: 'pointer',
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem',
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '5px'
+                        }}
+                    >
+                        📚 Ders Takip
+                    </button>
+
                     {user.role === 'admin' && (
                         <button
                             onClick={() => setStatus('USER_MANAGEMENT')}
@@ -367,6 +388,12 @@ function GameContainer() {
                 {status === 'USER_MANAGEMENT' && user?.role === 'admin' && (
                     <UserManagement
                         key="user-management"
+                        onBack={() => setStatus('LANDING')}
+                    />
+                )}
+                {status === 'STUDENT_PANEL' && (
+                    <StudentPanel
+                        key="student-panel"
                         onBack={() => setStatus('LANDING')}
                     />
                 )}
