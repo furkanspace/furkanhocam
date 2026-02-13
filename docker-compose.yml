@@ -10,6 +10,8 @@ services:
       - PORT=5001
     depends_on:
       - mongo
+    volumes:
+      - ./server/public/questions:/app/server/public/questions
     restart: always
 
   mongo:
