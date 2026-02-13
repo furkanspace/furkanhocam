@@ -65,13 +65,7 @@ const StudySection = ({ onBack, onSelectSubject }) => {
                             transition={{ delay: index * 0.15 }}
                             whileHover={{ scale: 1.05, y: -10 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                                if (subject.link) {
-                                    window.open(subject.link, '_blank');
-                                } else {
-                                    alert(`${subject.name} yakında aktif olacak!`);
-                                }
-                            }}
+                            onClick={() => onSelectSubject && onSelectSubject(subject)}
                             style={{ '--subject-color': subject.color, '--subject-gradient': subject.gradient }}
                         >
                             <motion.div

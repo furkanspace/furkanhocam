@@ -8,6 +8,8 @@ import DrawCeremony from './components/DrawCeremony';
 import Dashboard from './components/Dashboard';
 import MatchView from './components/MatchView';
 
+import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
+
 function App() {
     const [status, setStatus] = useState('LANDING'); // LANDING, SETUP, DRAW, DASHBOARD, MATCH
     const [teams, setTeams] = useState([]);
@@ -20,79 +22,95 @@ function App() {
     const [completedTournaments, setCompletedTournaments] = useState([]);
     const [currentTournamentId, setCurrentTournamentId] = useState(null);
 
-    // Load saved tournaments from localStorage
+    // Load saved tournaments from API
     useEffect(() => {
-        const saved = localStorage.getItem('activeTournaments');
-        if (saved) {
-            setActiveTournaments(JSON.parse(saved));
-        }
-        const completed = localStorage.getItem('completedTournaments');
-        if (completed) {
-            setCompletedTournaments(JSON.parse(completed));
-        }
+        const fetchTournaments = async () => {
+            const data = await getTournaments();
+            const active = data.filter(t => t.status !== 'COMPLETED');
+            const completed = data.filter(t => t.status === 'COMPLETED');
+            setActiveTournaments(active);
+            setCompletedTournaments(completed);
+        };
+        fetchTournaments();
     }, []);
 
-    // Save current tournament state
-    const saveTournament = (teamsData, modeData, fixturesData, resultsData, name) => {
-        const id = currentTournamentId || Date.now().toString();
-        const tournament = {
-            id,
+    // Save current tournament state (Create or Update)
+    const saveTournament = async (teamsData, modeData, fixturesData, resultsData, name, status = 'DASHBOARD', winner = null) => {
+        const tournamentData = {
             name: name || tournamentName || `Turnuva ${new Date().toLocaleDateString('tr-TR')}`,
-            teams: teamsData,
             mode: modeData,
+            teams: teamsData,
             fixtures: fixturesData,
             results: resultsData,
-            updatedAt: Date.now()
+            status: status,
+            winner: winner
         };
 
-        const existing = activeTournaments.filter(t => t.id !== id);
-        const updated = [...existing, tournament];
-        setActiveTournaments(updated);
-        localStorage.setItem('activeTournaments', JSON.stringify(updated));
-        setCurrentTournamentId(id);
+        try {
+            if (currentTournamentId) {
+                // Update existing
+                await updateTournament(currentTournamentId, tournamentData);
+
+                // Refresh list locally to reflect changes immediately (optimistic update or re-fetch)
+                const updatedActive = activeTournaments.map(t =>
+                    t._id === currentTournamentId ? { ...t, ...tournamentData } : t
+                );
+                setActiveTournaments(updatedActive);
+            } else {
+                // Create new
+                const newTournament = await createTournament(tournamentData);
+                setCurrentTournamentId(newTournament._id);
+                setActiveTournaments([...activeTournaments, newTournament]);
+            }
+        } catch (error) {
+            console.error("Failed to save tournament", error);
+        }
     };
 
     // Complete a tournament with a winner
-    const completeTournament = (winner) => {
-        const tournament = activeTournaments.find(t => t.id === currentTournamentId);
-        if (!tournament) return;
+    const completeTournament = async (winner) => {
+        if (!currentTournamentId) return;
 
-        const completed = {
-            id: currentTournamentId,
-            name: tournament.name,
-            winner: winner,
-            date: new Date().toLocaleDateString('tr-TR'),
-            mode: mode
-        };
+        // Save final state with winner and COMPLETED status
+        await saveTournament(teams, mode, fixtures, results, tournamentName, 'COMPLETED', winner);
 
-        const updatedCompleted = [...completedTournaments, completed];
-        setCompletedTournaments(updatedCompleted);
-        localStorage.setItem('completedTournaments', JSON.stringify(updatedCompleted));
-
-        // Remove from active
-        const updatedActive = activeTournaments.filter(t => t.id !== currentTournamentId);
-        setActiveTournaments(updatedActive);
-        localStorage.setItem('activeTournaments', JSON.stringify(updatedActive));
+        // Move from active to completed in local state
+        const tournament = activeTournaments.find(t => t._id === currentTournamentId);
+        if (tournament) {
+            const completedTournament = { ...tournament, status: 'COMPLETED', winner };
+            setCompletedTournaments([...completedTournaments, completedTournament]);
+            setActiveTournaments(activeTournaments.filter(t => t._id !== currentTournamentId));
+        }
     };
 
-    const handleDeleteTournament = (tournamentId) => {
-        const updated = activeTournaments.filter(t => t.id !== tournamentId);
-        setActiveTournaments(updated);
-        localStorage.setItem('activeTournaments', JSON.stringify(updated));
+    const handleDeleteTournament = async (tournamentId) => {
+        try {
+            await deleteTournament(tournamentId);
+            setActiveTournaments(activeTournaments.filter(t => t._id !== tournamentId));
+        } catch (error) {
+            console.error("Failed to delete tournament", error);
+        }
     };
 
-    const handleDeleteTrophy = (trophyId) => {
-        const updated = completedTournaments.filter(t => t.id !== trophyId);
-        setCompletedTournaments(updated);
-        localStorage.setItem('completedTournaments', JSON.stringify(updated));
+    const handleDeleteTrophy = async (trophyId) => {
+        try {
+            await deleteTournament(trophyId);
+            setCompletedTournaments(completedTournaments.filter(t => t._id !== trophyId));
+        } catch (error) {
+            console.error("Failed to delete trophy", error);
+        }
     };
 
-    const handleEditTrophy = (trophyId, newData) => {
-        const updated = completedTournaments.map(t =>
-            t.id === trophyId ? { ...t, ...newData } : t
-        );
-        setCompletedTournaments(updated);
-        localStorage.setItem('completedTournaments', JSON.stringify(updated));
+    const handleEditTrophy = async (trophyId, newData) => {
+        try {
+            await updateTournament(trophyId, newData);
+            const updated = completedTournaments.map(t =>
+                t._id === trophyId ? { ...t, ...newData } : t
+            );
+            setCompletedTournaments(updated);
+        } catch (error) {
+            console.error("Failed to update trophy", error);
+        }
     };
 
     const handleStartTournament = (teamList, tournamentMode, name) => {
@@ -132,7 +150,7 @@ function App() {
         setTournamentName(tournament.name);
         setFixtures(tournament.fixtures);
         setResults(tournament.results);
-        setCurrentTournamentId(tournament.id);
+        setCurrentTournamentId(tournament._id); // Use _id from MongoDB
         setStatus('DASHBOARD');
     };
 

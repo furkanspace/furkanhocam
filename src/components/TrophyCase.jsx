@@ -46,7 +46,7 @@ const TrophyCase = ({ trophies, onDeleteTrophy, onEditTrophy }) => {
 
     const handleEdit = (trophy) => {
         requestAuth(() => {
-            setEditingTrophy(trophy.id);
+            setEditingTrophy(trophy._id);
             setEditWinner(trophy.winner);
         });
     };
@@ -61,7 +61,7 @@ const TrophyCase = ({ trophies, onDeleteTrophy, onEditTrophy }) => {
     const handleDelete = (trophy) => {
         requestAuth(() => {
             if (confirm(`"${trophy.winner}" şampiyonluğunu silmek istediğinize emin misiniz?`)) {
-                onDeleteTrophy(trophy.id);
+                onDeleteTrophy(trophy._id);
             }
         });
     };
@@ -161,7 +161,7 @@ Tebrikler! 🎉🎊
                 <div className="trophy-grid">
                     {trophies.map((trophy, index) => (
                         <motion.div
-                            key={trophy.id || index}
+                            key={trophy._id || index}
                             className="trophy-item"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -192,7 +192,7 @@ Tebrikler! 🎉🎊
                                 <Trophy size={60} className="trophy-gold" />
                             </motion.div>
                             <div className="trophy-info">
-                                {editingTrophy === trophy.id ? (
+                                {editingTrophy === trophy._id ? (
                                     <div className="trophy-edit-inline">
                                         <input
                                             type="text"
@@ -201,7 +201,7 @@ Tebrikler! 🎉🎊
                                             className="edit-input"
                                             autoFocus
                                         />
-                                        <button onClick={() => saveEdit(trophy.id)} className="btn-edit-save">
+                                        <button onClick={() => saveEdit(trophy._id)} className="btn-edit-save">
                                             <Check size={16} />
                                         </button>
                                     </div>

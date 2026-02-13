@@ -79,16 +79,24 @@ const Setup = ({ onStart, activeTournaments = [], onResumeTournament, onDeleteTo
                     <h2>Aktif Turnuvalar</h2>
                     <div className="tournament-list">
                         {activeTournaments.map((t, i) => (
-                            <div key={t.id || i} className="tournament-item" onClick={() => onResumeTournament(t)}>
+                            <div key={t._id || i} className="tournament-item" onClick={() => onResumeTournament(t)}>
                                 <div className="tournament-info">
                                     <span className="tournament-name">{t.name || `Turnuva ${i + 1}`}</span>
                                     <span className="tournament-meta">{t.teams.length} takım • {t.mode === 'LEAGUE' ? 'Lig' : 'Kupa'}</span>
                                 </div>
                                 <div className="tournament-actions">
-                                    <span className="resume-btn">Devam Et →</span>
+                                    <button
+                                        className="resume-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onResumeTournament(t);
+                                        }}
+                                    >
+                                        Devam Et →
+                                    </button>
                                     <button
                                         className="btn-delete-tournament"
-                                        onClick={(e) => handleDeleteTournament(e, t.id)}
+                                        onClick={(e) => handleDeleteTournament(e, t._id)}
                                     >
                                         <Trash2 size={18} />
                                     </button>

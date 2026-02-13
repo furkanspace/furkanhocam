@@ -12,8 +12,8 @@ const categories = [
             {
                 name: '4. Sınıf',
                 items: [
-                    'Classroom Rules', 'Nationality', 'Cartoon Characters', 'Free Time',
-                    'My Day', 'Fun With Science', 'Jobs', 'My Clothes', 'My Friends', 'Food and Drinks'
+                    '10_Food and Drinks', '1_Classroom Rules', '2_Nationality', '3_Cartoon Characters', '4_Free Time',
+                    '5_My Day', '6_Fun With Science', '7_Jobs', '8_My Clothes', '9_My Friends'
                 ]
             }
         ]
@@ -26,19 +26,19 @@ const categories = [
         subcategories: [
             {
                 name: '5. Sınıf',
-                items: ['Hello', 'My Town', 'Games and Hobbies', 'My Daily Routine', 'Health', 'Movies', 'Party Time', 'Fitness', 'The Animal Shelter', 'Festivals']
+                items: ['1-Hello', '10-Festivals', '2-My Town', '3-Games and Hobbies', '4-My Daily Routine', '5-Health', '6-Movies', '7-Party Time', '8-Fitness', '9-The Animal Shelter']
             },
             {
                 name: '6. Sınıf',
-                items: ['Life', 'Yummy Breakfast', 'Downtown', 'Weather and Emotions', 'At the Fair', 'Occupations', 'Holidays', 'Bookworms', 'Saving the Planet', 'Democracy']
+                items: ['1-Life', '10-Democracy', '2-Yummy Breakfast', '3-Downtown', '4-Weather and Emotions', '5-At the Fair', '6-Occupations', '7-Holidays', '8-Bookworms', '9-Saving the Planet']
             },
             {
                 name: '7. Sınıf',
-                items: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Unit 7', 'Unit 8', 'Unit 9', 'Unit 10']
+                items: []
             },
             {
                 name: '8. Sınıf',
-                items: ['Friendship', 'Teen', 'The Kitchen', 'On the Phone', 'The Internet', 'Adventures', 'Tourism', 'Chores', 'Science', 'Natural Forces']
+                items: ['1-Friendship', '10-Natural Forces', '2-Teen', '3-The Kitchen', '4-On the Phone', '5-The Internet', '6-Adventures', '7-Tourism', '8-Chores', '9-Science']
             }
         ]
     },
@@ -50,19 +50,19 @@ const categories = [
         subcategories: [
             {
                 name: '9. Sınıf',
-                items: ['Studying Abroad', 'My Environment', 'Movies', 'Human in Nature', 'Inspirational People', 'Bridging Cultures', 'World Heritage', 'Emergency and Health', 'Invitations', 'TV and Social Media']
+                items: ['1-Studying Abroad', '10-Television and Social Media', '2-My Environment', '3-Movies', '4-Human in Nature', '5-Inspirational People', '6-Bridging Cultures', '7-World Heritage', '8-Emergency and Health Problems', '9-Invitations and Celebrations']
             },
             {
                 name: '10. Sınıf',
-                items: ['School Life', 'Plans', 'Legendary Figures', 'Traditions', 'Travel', 'Helpful Tips', 'Food and Festivals', 'Digital Era', 'Heroes and Heroines', 'Shopping']
+                items: ['1-School Life_flashcards', '10-Shopping_flashcards', '2-Plans_flashcards', '3-Legendary Figures_flashcards', '4-Traditions_flashcards', '5-Travel_flashcards', '6-Helpful Tips_flashcards', '7-Food and Festivals_flashcards', '8-Digital Era_flashcards', '9-Heroes and Heroines_flashcards']
             },
             {
                 name: '11. Sınıf',
-                items: ['Future Jobs', 'Hobbies and Skills', 'Hard Times', 'What a Life', 'Back to the Past', 'Open Your Heart', 'Facts About Turkey', 'Sports', 'My Friends', 'Values and Norms']
+                items: ['1-Future Jobs', '10-Values and Norms', '2-Hobbies and Skills', '3-Hard Times', '4-What a Life', '5-Back to the Past', '6-Open Your Heart', '7-Facts About Turkey', '8-Sports', '9-My Friends']
             },
             {
                 name: '12. Sınıf',
-                items: ['Music', 'Friendship', 'Human Rights', 'Coming Soon', 'Psychology', 'Favors', 'News Stories', 'Alternative Energy', 'Technology', 'Manners']
+                items: ['1-Music', '10-Manners', '2-Friendship', '3-Human Rights', '4-Coming Soon', '5-Psychology', '6-Favors', '7-News Stories', '8-Alternative Energy', '9-Technology']
             }
         ]
     },
@@ -79,14 +79,36 @@ const categories = [
         ]
     },
     {
-        id: 'exams',
-        name: 'Sınavlar',
+        id: 'yds',
+        name: 'YDS',
         icon: Award,
         color: '#ec4899',
         subcategories: [
-            { name: 'YDS', items: ['YDS 1', 'YDS 2', 'YDS 3'] },
-            { name: 'YÖKDİL', items: ['Fen', 'Sağlık', 'Sosyal'] },
-            { name: 'IELTS-TOEFL', items: ['Set 1', 'Set 2', 'Set 3'] }
+            { name: 'YDS 1', items: [] },
+            { name: 'YDS 2', items: [] },
+            { name: 'YDS 3', items: [] }
+        ]
+    },
+    {
+        id: 'yokdil',
+        name: 'YÖKDİL',
+        icon: FileText,
+        color: '#ef4444',
+        subcategories: [
+            { name: 'Fen', items: [] },
+            { name: 'Sağlık', items: [] },
+            { name: 'Sosyal', items: [] }
+        ]
+    },
+    {
+        id: 'ielts-toefl',
+        name: 'IELTS-TOEFL',
+        icon: Globe,
+        color: '#06b6d4',
+        subcategories: [
+            { name: 'Set 1', items: [] },
+            { name: 'Set 2', items: [] },
+            { name: 'Set 3', items: [] }
         ]
     }
 ];
