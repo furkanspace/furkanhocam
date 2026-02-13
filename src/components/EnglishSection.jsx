@@ -113,9 +113,54 @@ const categories = [
     }
 ];
 
+import { getFiles, uploadFile, deleteFile } from '../api';
+import { Lock, Upload, Trash2, Download, FileText, Check, X } from 'lucide-react';
+
+const ADMIN_PASSWORD = 'halilhoca...com';
+
 const EnglishSection = ({ onBack }) => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [passwordInput, setPasswordInput] = useState('');
+    const [passwordError, setPasswordError] = useState(false);
+    const [pendingAction, setPendingAction] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    // Helpers
+    const getPath = (category, subcategory) => {
+        const catId = category.id;
+        // Normalize subcategory name to folder name (e.g. "4. Sınıf" -> "4.sinif")
+        let subName = subcategory.name.toLowerCase().replace(' sınıf', '.sinif').replace(/\s+/g, '');
+        // Special cases if needed, matching the folder structure created
+        if (catId === 'ielts-toefl') subName = subcategory.name.toLowerCase().replace(/\s+/g, '-');
+        if (catId === 'yds') subName = subcategory.name.toLowerCase().replace(/\s+/g, '');
+        if (catId === 'yokdil') subName = 'yokmil' + subcategory.name.toLowerCase(); // Wait, folder was yokdilfen etc?
+        // Let's check folders created: yokdilfen, yokdilsaglik, yokdilsosyal
+        if (catId === 'yokdil') subName = 'yokdil' + subcategory.name.toLowerCase();
+
+        // Fix for simple cases
+        subName = subName.replace('ı', 'i').replace('ç', 'c').replace('ş', 's').replace('ö', 'o').replace('ü', 'u').replace('ğ', 'g');
+
+        return `${catId}/${subName}`;
+    };
+
+    const fetchFiles = async (category, subcategory) => {
+        setLoading(true);
+        try {
+            const path = getPath(category, subcategory);
+            const fileList = await getFiles(path);
+            setFiles(fileList);
+        } catch (error) {
+            console.error(error);
+            setFiles([]); // Fallback to empty or could show error
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
@@ -124,15 +169,66 @@ const EnglishSection = ({ onBack }) => {
 
     const handleSubcategoryClick = (subcategory) => {
         setSelectedSubcategory(subcategory);
+        fetchFiles(selectedCategory, subcategory);
     };
 
     const handleBackClick = () => {
         if (selectedSubcategory) {
             setSelectedSubcategory(null);
+            setFiles([]);
         } else if (selectedCategory) {
             setSelectedCategory(null);
         } else {
             onBack();
+        }
+    };
+
+    // Auth & Actions
+    const requestAuth = (action) => {
+        if (isAuthenticated) {
+            action();
+        } else {
+            setPendingAction(() => action);
+            setShowPasswordModal(true);
+        }
+    };
+
+    const handlePasswordSubmit = () => {
+        if (passwordInput === ADMIN_PASSWORD) {
+            setIsAuthenticated(true);
+            setShowPasswordModal(false);
+            if (pendingAction) pendingAction();
+        } else {
+            setPasswordError(true);
+        }
+    };
+
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const path = getPath(selectedCategory, selectedSubcategory);
+            await uploadFile(path, file);
+            await fetchFiles(selectedCategory, selectedSubcategory); // Refresh
+        } catch (error) {
+            alert('Yükleme başarısız!');
+        } finally {
+            setUploading(false);
+            e.target.value = null; // Reset input
+        }
+    };
+
+    const handleDelete = async (filename) => {
+        if (!confirm('Bu dosyayı silmek istediğinize emin misiniz?')) return;
+
+        try {
+            const path = `${getPath(selectedCategory, selectedSubcategory)}/${filename}`;
+            await deleteFile(path);
+            await fetchFiles(selectedCategory, selectedSubcategory); // Refresh
+        } catch (error) {
+            alert('Silme başarısız!');
         }
     };
 
@@ -143,6 +239,33 @@ const EnglishSection = ({ onBack }) => {
             exit={{ opacity: 0 }}
             className="english-section-page"
         >
+            {/* Password Modal */}
+            {showPasswordModal && (
+                <div className="modal-overlay" onClick={() => setShowPasswordModal(false)}>
+                    <div className="modal-content glass-panel" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <Lock size={24} className="modal-icon" />
+                            <h3>Yönetici Girişi</h3>
+                        </div>
+                        <p>Dosya yüklemek/silmek için şifre girin:</p>
+                        <input
+                            type="password"
+                            value={passwordInput}
+                            onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false); }}
+                            onKeyDown={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                            placeholder="Şifre"
+                            className={`password-input ${passwordError ? 'error' : ''}`}
+                            autoFocus
+                        />
+                        {passwordError && <span className="error-text">Yanlış şifre!</span>}
+                        <div className="modal-buttons">
+                            <button onClick={() => setShowPasswordModal(false)} className="btn-cancel">İptal</button>
+                            <button onClick={handlePasswordSubmit} className="btn-confirm">Giriş Yap</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="english-header">
                 <button onClick={handleBackClick} className="btn-back-english">
@@ -154,28 +277,6 @@ const EnglishSection = ({ onBack }) => {
                     <p>{selectedSubcategory ? selectedSubcategory.name : selectedCategory ? selectedCategory.name : 'Seviyeni seç, öğrenmeye başla!'}</p>
                 </div>
             </div>
-
-            {/* Kelime Kampı Link */}
-            {!selectedCategory && (
-                <motion.a
-                    href="https://kelime-kampi-app.vercel.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="kelime-kampi-banner"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    whileHover={{ scale: 1.02 }}
-                >
-                    <div className="banner-content">
-                        <span className="banner-icon">🎴</span>
-                        <div>
-                            <h3>Kelime Kampı</h3>
-                            <p>Flashcard uygulaması ile kelime ezberle</p>
-                        </div>
-                    </div>
-                    <ExternalLink size={20} />
-                </motion.a>
-            )}
 
             {/* Content */}
             <div className="english-content">
@@ -236,7 +337,7 @@ const EnglishSection = ({ onBack }) => {
                                 >
                                     <div className="subcategory-info">
                                         <h4>{sub.name}</h4>
-                                        <span>{sub.items.length} konu</span>
+                                        <span>{sub.items.length > 0 ? sub.items.length + ' konu' : 'Dosyaları Görüntüle'}</span>
                                     </div>
                                     <ChevronRight size={20} />
                                 </motion.div>
@@ -244,34 +345,77 @@ const EnglishSection = ({ onBack }) => {
                         </motion.div>
                     )}
 
-                    {/* Topics List */}
+                    {/* Files List */}
                     {selectedSubcategory && (
                         <motion.div
-                            key="topics"
-                            className="topics-list"
+                            key="files"
+                            className="files-container"
                             initial={{ opacity: 0, x: 50 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -50 }}
                         >
-                            {selectedSubcategory.items.length === 0 ? (
-                                <div className="empty-topics">
-                                    <p>🚧 Bu bölüm yakında eklenecek!</p>
+                            {/* Toolbar */}
+                            <div className="files-toolbar">
+                                <h3>Dosyalar</h3>
+                                <button
+                                    className="btn-upload"
+                                    onClick={() => requestAuth(() => document.getElementById('file-upload').click())}
+                                >
+                                    <Upload size={18} /> Dosya Yükle
+                                </button>
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    style={{ display: 'none' }}
+                                    onChange={handleUpload}
+                                    disabled={uploading}
+                                />
+                            </div>
+
+                            {loading ? (
+                                <div className="loading-spinner">Yükleniyor...</div>
+                            ) : files.length === 0 ? (
+                                <div className="empty-state">
+                                    <p>Bu klasörde henüz dosya yok.</p>
                                 </div>
                             ) : (
-                                selectedSubcategory.items.map((topic, index) => (
-                                    <motion.div
-                                        key={topic}
-                                        className="topic-card"
-                                        initial={{ opacity: 0, y: 15 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.03 }}
-                                        whileHover={{ scale: 1.01, x: 5 }}
-                                        style={{ '--category-color': selectedCategory.color }}
-                                    >
-                                        <FileText size={18} className="topic-icon" />
-                                        <span>{topic}</span>
-                                    </motion.div>
-                                ))
+                                <div className="files-grid">
+                                    {files.map((file, index) => (
+                                        <motion.div
+                                            key={file.name}
+                                            className="file-card"
+                                            initial={{ opacity: 0, y: 15 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: index * 0.05 }}
+                                        >
+                                            <div className="file-icon">
+                                                <FileText size={24} />
+                                            </div>
+                                            <div className="file-info">
+                                                <span className="file-name" title={file.name}>{file.name}</span>
+                                                <span className="file-size">{(file.size / 1024).toFixed(1)} KB</span>
+                                            </div>
+                                            <div className="file-actions">
+                                                <a
+                                                    href={import.meta.env.PROD ? file.url : `http://localhost:5001${file.url}`}
+                                                    target="_blank"
+                                                    download
+                                                    className="btn-download"
+                                                >
+                                                    <Download size={18} />
+                                                </a>
+                                                {isAuthenticated && (
+                                                    <button
+                                                        className="btn-delete"
+                                                        onClick={() => handleDelete(file.name)}
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
                             )}
                         </motion.div>
                     )}
