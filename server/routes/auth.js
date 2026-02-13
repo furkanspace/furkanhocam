@@ -91,6 +91,7 @@ router.post('/login', async (req, res) => {
             }
         });
     } catch (error) {
+        console.error('Login error:', error);
         res.status(500).json({ message: 'Error logging in', error: error.message });
     }
 });
@@ -155,7 +156,8 @@ router.post('/setup-admin', async (req, res) => {
         await newAdmin.save();
         res.json({ message: 'Admin created. Login with admin/adminpassword123' });
     } catch (error) {
-        res.status(500).json({ message: 'Error setting up admin' });
+        console.error('Error setting up admin:', error);
+        res.status(500).json({ message: 'Error setting up admin', error: error.message, stack: error.stack });
     }
 });
 
