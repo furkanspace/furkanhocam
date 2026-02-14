@@ -2,7 +2,21 @@ const express = require('express');
 const router = express.Router();
 const SkillTree = require('../models/SkillTree');
 const SkillProgress = require('../models/SkillProgress');
-const { verifyToken } = require('./auth');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'gizli_anahtar_degistir_bunu';
+
+const verifyToken = (req, res, next) => {
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ message: 'Access Denied' });
+    try {
+        const verified = jwt.verify(token.replace('Bearer ', ''), JWT_SECRET);
+        req.user = verified;
+        next();
+    } catch (error) {
+        res.status(400).json({ message: 'Invalid Token' });
+    }
+};
 
 const STEP_TYPES = [
     { id: 1, type: 'vocabulary', name: 'Kelime Tanıma', icon: '📖', xp: 10 },
