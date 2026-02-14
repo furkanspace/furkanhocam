@@ -5625,3 +5625,373 @@ button:disabled {
         gap: 0.5rem;
     }
 }
+
+/* ===========================
+   LEAGUE PAGE
+   =========================== */
+.league-page {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.league-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.league-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 60vh;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.league-promote-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    color: #00ff88;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.league-promote-btn:hover {
+    background: rgba(0, 255, 136, 0.2);
+}
+
+/* League Banner */
+.league-banner {
+    border-radius: 20px;
+    padding: 1.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.league-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.1) 75%, transparent 75%);
+    background-size: 20px 20px;
+    opacity: 0.15;
+}
+
+.league-banner-emoji {
+    font-size: 3rem;
+    z-index: 1;
+}
+
+.league-banner-info {
+    flex: 1;
+    z-index: 1;
+}
+
+.league-banner-info h1 {
+    margin: 0;
+    font-family: var(--header-font);
+    color: white;
+    font-size: 1.6rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.league-banner-info p {
+    margin: 0.3rem 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.league-banner-rank {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+}
+
+.lbr-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+}
+
+.lbr-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* League Tabs */
+.league-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+    overflow-x: auto;
+    padding-bottom: 0.3rem;
+}
+
+.league-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.league-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.league-tab.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-weight: 700;
+}
+
+.league-tab.my-league::after {
+    content: '•';
+    font-size: 0.6rem;
+    margin-left: 2px;
+}
+
+.lt-name {
+    font-size: 0.8rem;
+}
+
+/* League Standings */
+.league-standings {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.league-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 3rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.league-table-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px 60px 80px 90px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 0.3rem;
+}
+
+.league-row {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px 60px 80px 90px;
+    align-items: center;
+    padding: 0.7rem 0.8rem;
+    border-radius: 10px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.league-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.league-row-me {
+    background: rgba(0, 255, 136, 0.06) !important;
+    border: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+.league-row-promotion {
+    border-left: 3px solid #00ff88;
+}
+
+.league-row-relegation {
+    border-left: 3px solid #ff4444;
+}
+
+.league-row-safe {
+    border-left: 3px solid transparent;
+}
+
+.lr-rank {
+    font-weight: 800;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.lr-name {
+    color: white;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lr-me-badge {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.lr-xp {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #f59e0b;
+    font-weight: 700;
+}
+
+.lr-quiz {
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+.lr-acc {
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+}
+
+.zone-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.zone-up {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+}
+
+.zone-down {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff4444;
+}
+
+.zone-safe {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* Legend */
+.league-legend {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.legend-dot-up {
+    background: #00ff88;
+}
+
+.legend-dot-safe {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.legend-dot-down {
+    background: #ff4444;
+}
+
+@media (max-width: 768px) {
+    .league-page {
+        padding: 1rem;
+        padding-top: 3.5rem;
+    }
+
+    .league-banner {
+        padding: 1.2rem;
+        flex-wrap: wrap;
+    }
+
+    .league-banner-info h1 {
+        font-size: 1.2rem;
+    }
+
+    .league-table-header,
+    .league-row {
+        grid-template-columns: 40px 1fr 80px 70px;
+    }
+
+    .lth-quiz,
+    .lr-quiz,
+    .lth-acc,
+    .lr-acc {
+        display: none;
+    }
+
+    .league-legend {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .league-table-header,
+    .league-row {
+        grid-template-columns: 35px 1fr 70px;
+    }
+
+    .lth-zone,
+    .lr-zone {
+        display: none;
+    }
+}

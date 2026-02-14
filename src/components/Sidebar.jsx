@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
     LayoutDashboard, BookOpen, Trophy, GraduationCap,
-    User, Shield, LogOut, Menu, X, ChevronRight, Zap, Database
+    User, Shield, LogOut, Menu, X, ChevronRight, Zap, Database, Crown
 } from 'lucide-react';
 
 const Sidebar = ({ currentPage, onNavigate }) => {
@@ -17,6 +17,7 @@ const Sidebar = ({ currentPage, onNavigate }) => {
         { id: 'HOME', label: 'Ana Sayfa', icon: <LayoutDashboard size={22} />, always: true },
         { id: 'DAILY_QUIZ', label: 'Günlük Quiz', icon: <Zap size={22} />, sub: 'Soru & Sıralama', always: true },
         { id: 'ARENA', label: 'Arena', icon: <Trophy size={22} />, sub: 'Turnuvalar', always: true },
+        { id: 'LEAGUE', label: 'Lig', icon: <Crown size={22} />, sub: 'Sıralama', always: true },
         { id: 'STUDY', label: 'Kütüphane', icon: <BookOpen size={22} />, sub: 'Dersler', always: true },
         { id: 'STUDENT_PANEL', label: 'Eğitim', icon: <GraduationCap size={22} />, sub: 'Takip & Sorular', always: true },
         { id: 'PROFILE', label: 'Profil', icon: <User size={22} />, sub: 'Başarılar', always: true },

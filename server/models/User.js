@@ -21,6 +21,15 @@ const UserSchema = new mongoose.Schema({
         enum: ['admin', 'staff', 'student', 'parent'],
         default: 'student'
     },
+    league: {
+        type: String,
+        enum: ['bronze', 'silver', 'gold', 'platinum', 'diamond'],
+        default: 'bronze'
+    },
+    leagueUpdatedAt: {
+        type: Date,
+        default: null
+    },
     createdAt: {
         type: Date,
         default: Date.now

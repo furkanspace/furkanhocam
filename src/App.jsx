@@ -18,6 +18,7 @@ import StudentPanel from './components/StudentPanel';
 import ProfilePage from './components/ProfilePage';
 import QuizBankPage from './components/QuizBankPage';
 import DailyQuizPage from './components/DailyQuizPage';
+import LeaguePage from './components/LeaguePage';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
@@ -317,6 +318,14 @@ function GameContainer() {
                     {currentPage === 'QUIZ_BANK' && (user?.role === 'admin' || user?.role === 'staff') && (
                         <QuizBankPage
                             key="quiz-bank"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* LEAGUE (Lig Sıralaması) */}
+                    {currentPage === 'LEAGUE' && (
+                        <LeaguePage
+                            key="league"
                             onBack={() => handleNavigate('HOME')}
                         />
                     )}
