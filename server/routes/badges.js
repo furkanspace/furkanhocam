@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const QuizAttempt = require('../models/QuizAttempt');
+const DailyTournament = require('../models/DailyTournament');
+const SkillProgress = require('../models/SkillProgress');
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'gizli_anahtar_degistir_bunu';
@@ -43,15 +46,18 @@ const BADGE_DEFS = [
     { id: 'xp_legend', category: 'quiz', check: (s) => s.totalXP >= 1000 },
 ];
 
-// GET /api/badges/my — Birleşik istatistikler + rozet durumu
+// GET /api/badges/my — Birleşik istatistikler + rozet durumu + Kalıcı XP
 router.get('/my', verifyToken, async (req, res) => {
     try {
-        // Ders istatistikleri
+        const userId = req.user._id;
+        const user = await User.findById(userId);
+
+        // 1. Ders İstatistikleri (Lesson)
         let lessonStats = { lessonsTotal: 0, lessonsDone: 0, lessonsMissed: 0, lessonsMakeup: 0 };
         try {
             const LessonSchedule = require('../models/LessonSchedule');
             const filter = (req.user.role === 'student' || req.user.role === 'parent')
-                ? { student: req.user._id } : {};
+                ? { student: userId } : {};
             const lessons = await LessonSchedule.find(filter);
             lessonStats = {
                 lessonsTotal: lessons.length,
@@ -60,12 +66,11 @@ router.get('/my', verifyToken, async (req, res) => {
                 lessonsMakeup: lessons.filter(l => l.makeupCompleted).length,
             };
         } catch (e) {
-            // LessonSchedule model may not exist yet in some setups
             console.log('Lesson stats unavailable:', e.message);
         }
 
-        // Quiz istatistikleri
-        const quizAttempts = await QuizAttempt.find({ student: req.user._id });
+        // 2. Quiz İstatistikleri
+        const quizAttempts = await QuizAttempt.find({ student: userId });
         const quizCount = quizAttempts.length;
         const quizTotalCorrect = quizAttempts.reduce((sum, a) => sum + a.score, 0);
         const quizTotalQuestions = quizAttempts.reduce((sum, a) => sum + a.totalQuestions, 0);
@@ -77,11 +82,27 @@ router.get('/my', verifyToken, async (req, res) => {
         const quizPerfect = quizAttempts.filter(a => a.score === a.totalQuestions && a.totalQuestions > 0).length;
         const quizPct = quizTotalQuestions > 0 ? Math.round((quizTotalCorrect / quizTotalQuestions) * 100) : 0;
 
-        // Birleşik XP
-        const lessonXP = (lessonStats.lessonsDone * 10) + (lessonStats.lessonsMakeup * 15);
-        const totalXP = lessonXP + quizXP;
+        // 3. Turnuva XP'si
+        // DailyTournament collection içinde participants array'inde student ID'si eşleşenleri bul
+        const tournaments = await DailyTournament.find({ 'participants.student': userId });
+        let tournamentXP = 0;
+        tournaments.forEach(t => {
+            const p = t.participants.find(part => part.student.toString() === userId.toString());
+            if (p) tournamentXP += (p.xpEarned || 0);
+        });
 
-        // Tüm istatistikler
+        // 4. Beceri Ağacı (Skill Tree) XP'si
+        const skillProgress = await SkillProgress.findOne({ student: userId });
+        const skillTreeXP = skillProgress ? skillProgress.totalXP : 0;
+
+        // 5. Bonus XP (Rozetlerden vs.)
+        const bonusXP = user.bonusXP || 0;
+
+        // --- TOPLAM XP ---
+        const lessonXP = (lessonStats.lessonsDone * 10) + (lessonStats.lessonsMakeup * 15);
+        const totalXP = lessonXP + quizXP + tournamentXP + skillTreeXP + bonusXP;
+
+        // Tüm istatistikler objesi (Rozet kontrolü için)
         const allStats = {
             ...lessonStats,
             quizCount,
@@ -93,18 +114,67 @@ router.get('/my', verifyToken, async (req, res) => {
             quizPerfect,
             quizPct,
             lessonXP,
-            totalXP,
+            totalXP, // Artık her şeyi içeriyor
+            tournamentXP,
+            skillTreeXP
         };
 
-        // Rozet kontrolü
-        const badges = BADGE_DEFS.map(b => ({
-            id: b.id,
-            category: b.category,
-            earned: b.check(allStats),
-        }));
+        // --- ROZET KONTROLÜ VE KAYIT ---
+        // Mevcut kazanılmış rozet ID'leri
+        const existingBadgeIds = (user.badges || []).map(b => b.id);
+        let newBadgesEarned = false;
+        let newBonusXP = 0;
+        const newBadgeNames = [];
 
-        res.json({ stats: allStats, badges });
+        const badges = BADGE_DEFS.map(b => {
+            const alreadyEarned = existingBadgeIds.includes(b.id);
+            // Zaten kazanıldıysa tekrar kontrol etmeye gerek yok, earned=true
+            if (alreadyEarned) {
+                return { id: b.id, category: b.category, earned: true, isNew: false };
+            }
+
+            // Kazanılmadıysa şartı kontrol et
+            const earnedNow = b.check(allStats);
+            if (earnedNow) {
+                // YENİ ROZET KAZANILDI!
+                newBadgesEarned = true;
+                user.badges.push({ id: b.id, earnedAt: new Date() });
+
+                // Rozet ödülü: +50 XP
+                const reward = 50;
+                user.bonusXP = (user.bonusXP || 0) + reward;
+                newBonusXP += reward;
+                newBadgeNames.push(b.id); // İsimlendirme eklenebilir
+
+                return { id: b.id, category: b.category, earned: true, isNew: true };
+            }
+
+            return { id: b.id, category: b.category, earned: false };
+        });
+
+        // Eğer yeni rozet varsa kullanıcıyı kaydet
+        if (newBadgesEarned) {
+            await user.save();
+            // Total XP arttığı için allStats.totalXP'yi güncellememiz lazım ama 
+            // görsel olarak client tarafında eski halini gösterip animasyonla artırmak daha şık olabilir.
+            // Şimdilik güncel hali dönüyoruz:
+            allStats.totalXP += newBonusXP;
+        }
+
+        res.json({
+            stats: allStats,
+            badges,
+            newBadges: newBadgeNames.length > 0 ? newBadgeNames : null,
+            xpBreakdown: {
+                lesson: lessonXP,
+                quiz: quizXP,
+                tournament: tournamentXP,
+                skillTree: skillTreeXP,
+                bonus: user.bonusXP || 0
+            }
+        });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: err.message });
     }
 });
