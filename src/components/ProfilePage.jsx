@@ -187,35 +187,6 @@ const ProfilePage = ({ onBack }) => {
                 </motion.div>
             </div>
 
-            {/* XP Breakdown */}
-            {stats && (
-                <motion.div className="profile-xp-breakdown glass-panel" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.38 }}>
-                    <h3>📊 XP Detayları</h3>
-                    <div className="pxb-grid">
-                        <div className="pxb-item">
-                            <span className="pxb-label">📚 Dersler</span>
-                            <span className="pxb-val">+{stats.lessonXP || 0}</span>
-                        </div>
-                        <div className="pxb-item">
-                            <span className="pxb-label">🧠 Quizler</span>
-                            <span className="pxb-val">+{stats.quizXP || 0}</span>
-                        </div>
-                        <div className="pxb-item">
-                            <span className="pxb-label">⚔️ Turnuvalar</span>
-                            <span className="pxb-val">+{stats.tournamentXP || 0}</span>
-                        </div>
-                        <div className="pxb-item">
-                            <span className="pxb-label">🌳 Beceri Ağacı</span>
-                            <span className="pxb-val">+{stats.skillTreeXP || 0}</span>
-                        </div>
-                        <div className="pxb-item">
-                            <span className="pxb-label">💎 Bonuslar</span>
-                            <span className="pxb-val">+{stats.bonusXP || (activeTab === 'bonus' ? stats.bonusXP : (totalXP - (stats.lessonXP + stats.quizXP + (stats.tournamentXP || 0) + (stats.skillTreeXP || 0))))}</span>
-                        </div>
-                    </div>
-                </motion.div>
-            )}
-
             {/* Badges Section */}
             <motion.div className="profile-section glass-panel" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
                 <div className="badge-section-header">
