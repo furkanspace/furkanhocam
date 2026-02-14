@@ -22,19 +22,19 @@
 - [x] ~~Navigasyon genişletme (5 ana sekme)~~ ✅
 - [x] ~~Dashboard sayfası (öğrenci kontrol paneli)~~ ✅
 - [x] ~~Soru bankası + günlük quiz~~ ✅
-- [ ] Rozet/Başarı sistemi
+- [x] ~~Rozet/Başarı sistemi (20 rozet + birleşik XP)~~ ✅
 
 ### 🟡 Kısa Vadeli (Q1-Q2)
 - [ ] Beceri ağaçları (Skill Trees) — RPG tarzı ders ilerleme haritası
 - [ ] XP/seviye sistemi genişletme (quiz dışı XP kaynakları)
-- [ ] Turnuva sekmesini lig sistemiyle güçlendirme (Bronz/Gümüş/Altın)
+- [x] ~~Turnuva sekmesini lig sistemiyle güçlendirme (Bronz/Gümüş/Altın/Platin/Elmas)~~ ✅
 - [ ] Günlük turnuvalar (10-15 soru, belirli saatte açılan yarışmalar)
 - [ ] Redis tabanlı gerçek zamanlı leaderboard
 
 ### 🟢 Orta Vadeli (Q2-Q3)
 - [ ] WebSocket entegrasyonu (anlık bildirimler, canlı turnuva güncellemeleri)
 - [ ] Öğrenci ilerleme grafikleri ve yetenek ağacı görselleştirme
-- [ ] Haftalık ligler (üst lige çıkma/düşme riski)
+- [x] ~~Haftalık ligler (üst lige çıkma/düşme riski)~~ ✅
 - [ ] Büyük deneme sınavı simülasyonu + dijital sertifika
 - [ ] Kelime oyunları, gramer bulmacaları, interaktif egzersizler
 
@@ -71,8 +71,8 @@ Deploy:   Docker + DigitalOcean
 ### Temel Mekanikler
 1. **Beceri Ağaçları** — Lineer ders listesi yerine RPG tarzı ilerleme haritası
 2. **Seri (Streak)** — Günlük çalışma alışkanlığı ödüllendirme ✅ (Quiz'de uygulandı)
-3. **Rozetler** — Başarı kanıtı olarak paylaşılabilir dijital rozetler
-4. **Lig Sistemi** — Bronz → Gümüş → Altın → Elmas sıralama yapısı
+3. **Rozetler** — 20 rozet (10 ders + 10 quiz), ilerleme çubuğu ✅
+4. **Lig Sistemi** — Bronz → Gümüş → Altın → Platin → Elmas sıralama yapısı ✅
 5. **Sosyal Kanıt** — Başarı hikayeleri ve ilerleme grafikleri
 
 ### XP Kaynakları (Mevcut + Planlanan)
@@ -80,7 +80,7 @@ Deploy:   Docker + DigitalOcean
 |--------|-----|-------|
 | Günlük Quiz doğru cevap | 5 XP/soru | ✅ Aktif |
 | Quiz streak bonusu | 2 XP × gün | ✅ Aktif |
-| Ders tamamlama | 10-50 XP | 📋 Planlanan |
+| Ders tamamlama | 10 XP/ders, 15 XP/telafi | ✅ Aktif |
 | Turnuva katılımı | 20-100 XP | 📋 Planlanan |
 | Rozet kazanma | 50 XP | 📋 Planlanan |
 
