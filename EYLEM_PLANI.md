@@ -29,7 +29,7 @@
 - [ ] Beceri ağacı içerik yönetimi — Her adıma soru, kelime, ses, alıştırma ekleme (Admin paneli + StepContent modeli)
 - [ ] XP/seviye sistemi genişletme (quiz dışı XP kaynakları)
 - [x] ~~Turnuva sekmesini lig sistemiyle güçlendirme (Bronz/Gümüş/Altın/Platin/Elmas)~~ ✅
-- [ ] Günlük turnuvalar (10-15 soru, belirli saatte açılan yarışmalar)
+- [x] ~~Günlük turnuvalar (10-15 soru, belirli saatte açılan yarışmalar)~~ ✅
 - [ ] Redis tabanlı gerçek zamanlı leaderboard
 
 ### 🟢 Orta Vadeli (Q2-Q3)

@@ -15,11 +15,13 @@ const ParticipantSchema = new mongoose.Schema({
 }, { _id: false });
 
 const DailyTournamentSchema = new mongoose.Schema({
-    title: { type: String, default: 'Akşam Turnuvası' },
-    date: { type: String, required: true },
-    startTime: { type: String, required: true, default: '20:00' },
-    endTime: { type: String, required: true, default: '21:00' },
-    questionCount: { type: Number, default: 10, min: 5, max: 20 },
+    title: { type: String, required: true, default: 'Turnuva' },
+    type: { type: String, enum: ['daily', 'weekly', 'custom'], default: 'daily' },
+    startDate: { type: String, required: true },   // YYYY-MM-DD
+    endDate: { type: String, required: true },      // YYYY-MM-DD (aynı gün = günlük)
+    startTime: { type: String, required: true },    // HH:mm
+    endTime: { type: String, required: true },      // HH:mm
+    questionCount: { type: Number, default: 10, min: 5, max: 30 },
     subject: { type: String, default: null },
     difficulty: { type: Number, default: null },
     questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuizQuestion' }],
@@ -29,6 +31,6 @@ const DailyTournamentSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-DailyTournamentSchema.index({ date: 1, status: 1 });
+DailyTournamentSchema.index({ startDate: 1, endDate: 1, status: 1 });
 
 module.exports = mongoose.model('DailyTournament', DailyTournamentSchema);

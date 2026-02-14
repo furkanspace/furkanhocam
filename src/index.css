@@ -7244,3 +7244,259 @@ button:disabled {
         font-size: 0.95rem;
     }
 }
+
+/* ===== TOURNAMENT CARDS ===== */
+.dt-tournament-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.dt-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.dt-card-active {
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+.dt-card-scheduled {
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+.dt-card-ended {
+    opacity: 0.6;
+}
+
+.dt-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.dt-card-title {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.dt-card-type {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.dt-card-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.status-active {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.status-scheduled {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.status-ended {
+    background: rgba(100, 100, 100, 0.15);
+    color: #888;
+}
+
+.dt-card-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+}
+
+.dt-card-info span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dt-card-countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.5rem;
+    color: #f59e0b;
+    letter-spacing: 2px;
+}
+
+.dt-cd-txt {
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0;
+}
+
+/* ===== CREATE MODAL ===== */
+.dt-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.dt-modal {
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.dt-modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dt-modal-head h2 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.dt-modal-close {
+    background: rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.dt-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.dt-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dt-form label>span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.dt-form input,
+.dt-form select {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.dt-form input:focus,
+.dt-form select:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.dt-form input[type="range"] {
+    padding: 0;
+    height: 6px;
+    accent-color: var(--accent);
+}
+
+.dt-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.dt-type-btns {
+    display: flex;
+    gap: 8px;
+}
+
+.dt-type-btn {
+    flex: 1;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.dt-type-btn.active {
+    border-color: var(--accent);
+    color: #fff;
+    background: rgba(59, 130, 246, 0.12);
+}
+
+.dt-create-submit {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.dt-create-submit:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+@media (max-width: 500px) {
+    .dt-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .dt-type-btns {
+        flex-direction: column;
+    }
+
+    .dt-card-countdown {
+        font-size: 1.2rem;
+    }
+}

@@ -23,94 +23,98 @@ const checkRole = (roles) => (req, res, next) => {
     next();
 };
 
-// Helper: Turnuva durumunu güncelle
-function computeStatus(tournament) {
+// Helper: Turnuva durumunu hesapla
+function computeStatus(t) {
     const now = new Date();
-    const dateStr = tournament.date;
-    const startParts = tournament.startTime.split(':');
-    const endParts = tournament.endTime.split(':');
+    const today = now.toISOString().split('T')[0];
 
-    const startDt = new Date(dateStr + 'T' + tournament.startTime + ':00');
-    const endDt = new Date(dateStr + 'T' + tournament.endTime + ':00');
+    // Henüz başlamamış (başlangıç tarihi gelmemiş)
+    if (today < t.startDate) return 'scheduled';
 
-    // Handle timezone offset (Turkey = UTC+3)
-    const offset = now.getTimezoneOffset(); // in minutes
+    // Bitiş tarihi geçmiş
+    if (today > t.endDate) return 'ended';
 
-    if (now < startDt) return 'scheduled';
-    if (now >= startDt && now <= endDt) return 'active';
-    return 'ended';
+    // Bugün tarih aralığında — saate bak
+    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+    const [sh, sm] = t.startTime.split(':').map(Number);
+    const [eh, em] = t.endTime.split(':').map(Number);
+    const startMin = sh * 60 + sm;
+    const endMin = eh * 60 + em;
+
+    if (nowMinutes < startMin) return 'scheduled';
+    if (nowMinutes > endMin) {
+        // Bugün son günse ended, değilse yarın devam
+        if (today >= t.endDate) return 'ended';
+        return 'scheduled'; // yarın tekrar açılacak
+    }
+    return 'active';
 }
 
-// GET /api/tournaments/daily/active — Aktif veya yaklaşan turnuva
+// GET /api/tournaments/daily/active — Aktif ve yaklaşan tüm turnuvalar
 router.get('/daily/active', verifyToken, async (req, res) => {
     try {
         const today = new Date().toISOString().split('T')[0];
 
-        // Bugünün turnuvası
-        let tournament = await DailyTournament.findOne({ date: today })
+        // Henüz bitmemiş turnuvaları getir
+        const tournaments = await DailyTournament.find({
+            endDate: { $gte: today }
+        })
             .populate('questions', 'subject topic difficulty questionText options correctAnswer explanation')
+            .sort({ startDate: 1, startTime: 1 })
             .lean();
 
-        if (!tournament) {
-            return res.json({ tournament: null, message: 'Bugün turnuva yok' });
-        }
+        const results = tournaments.map(t => {
+            const realStatus = computeStatus(t);
 
-        // Durumu güncelle
-        const realStatus = computeStatus(tournament);
-        if (realStatus !== tournament.status) {
-            await DailyTournament.findByIdAndUpdate(tournament._id, { status: realStatus });
-            tournament.status = realStatus;
-        }
+            // Öğrenci katıldı mı?
+            const myParticipation = t.participants.find(
+                p => p.student.toString() === req.user._id.toString()
+            );
 
-        // Öğrenci zaten katıldı mı?
-        const myParticipation = tournament.participants.find(
-            p => p.student.toString() === req.user._id.toString()
-        );
+            // Sorular — sadece aktif ve katılmadıysa
+            let questions = null;
+            if (realStatus === 'active' && !myParticipation) {
+                questions = t.questions.map(q => ({
+                    _id: q._id,
+                    subject: q.subject,
+                    topic: q.topic,
+                    difficulty: q.difficulty,
+                    questionText: q.questionText,
+                    options: q.options
+                }));
+            }
 
-        // Sorular — sadece aktif turnuvada ve henüz katılmadıysa gönder
-        let questions = null;
-        if (tournament.status === 'active' && !myParticipation) {
-            questions = tournament.questions.map(q => ({
-                _id: q._id,
-                subject: q.subject,
-                topic: q.topic,
-                difficulty: q.difficulty,
-                questionText: q.questionText,
-                options: q.options
-                // correctAnswer gönderilmiyor!
-            }));
-        }
+            // Mini sıralama
+            const leaderboard = t.participants
+                .map(p => ({
+                    student: p.student,
+                    score: p.score,
+                    totalTime: p.totalTime,
+                    xpEarned: p.xpEarned
+                }))
+                .sort((a, b) => b.score - a.score || a.totalTime - b.totalTime);
 
-        // Katılımcı sayısı
-        const participantCount = tournament.participants.length;
-
-        // Sıralama (basit)
-        const leaderboard = tournament.participants
-            .map(p => ({
-                student: p.student,
-                score: p.score,
-                totalTime: p.totalTime,
-                xpEarned: p.xpEarned,
-                submittedAt: p.submittedAt
-            }))
-            .sort((a, b) => b.score - a.score || a.totalTime - b.totalTime);
-
-        res.json({
-            tournament: {
-                _id: tournament._id,
-                title: tournament.title,
-                date: tournament.date,
-                startTime: tournament.startTime,
-                endTime: tournament.endTime,
-                questionCount: tournament.questionCount,
-                subject: tournament.subject,
-                status: tournament.status,
-                participantCount,
-                myParticipation: myParticipation || null
-            },
-            questions,
-            leaderboard
+            return {
+                tournament: {
+                    _id: t._id,
+                    title: t.title,
+                    type: t.type,
+                    startDate: t.startDate,
+                    endDate: t.endDate,
+                    startTime: t.startTime,
+                    endTime: t.endTime,
+                    questionCount: t.questionCount,
+                    subject: t.subject,
+                    status: realStatus,
+                    participantCount: t.participants.length,
+                    myParticipation: myParticipation || null
+                },
+                questions,
+                leaderboard
+            };
         });
+
+        res.json(results);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -124,24 +128,21 @@ router.post('/daily/:id/submit', verifyToken, async (req, res) => {
 
         if (!tournament) return res.status(404).json({ message: 'Turnuva bulunamadı' });
 
-        // Aktif mi kontrol
         const realStatus = computeStatus(tournament);
         if (realStatus !== 'active') {
             return res.status(400).json({ message: 'Turnuva aktif değil' });
         }
 
-        // Zaten katıldı mı?
         const already = tournament.participants.find(
             p => p.student.toString() === req.user._id.toString()
         );
         if (already) return res.status(400).json({ message: 'Zaten katıldınız' });
 
-        const { answers } = req.body; // [{questionIdx, selected, timeSpent}]
+        const { answers } = req.body;
         if (!answers || !Array.isArray(answers)) {
             return res.status(400).json({ message: 'Geçersiz cevap formatı' });
         }
 
-        // Puanla
         let score = 0;
         let totalTime = 0;
         const gradedAnswers = answers.map(a => {
@@ -157,10 +158,8 @@ router.post('/daily/:id/submit', verifyToken, async (req, res) => {
             };
         });
 
-        // XP hesapla: 5 XP per correct + bonus for speed
         let xpEarned = score * 5;
 
-        // Katılımcıya ekle
         tournament.participants.push({
             student: req.user._id,
             answers: gradedAnswers,
@@ -171,14 +170,13 @@ router.post('/daily/:id/submit', verifyToken, async (req, res) => {
         });
         await tournament.save();
 
-        // Sıralamadaki yerim
+        // Sıralama
         const sorted = tournament.participants
             .sort((a, b) => b.score - a.score || a.totalTime - b.totalTime);
         const myRank = sorted.findIndex(
             p => p.student.toString() === req.user._id.toString()
         ) + 1;
 
-        // İlk 3 bonus XP
         let bonusXP = 0;
         if (myRank === 1) bonusXP = 50;
         else if (myRank === 2) bonusXP = 30;
@@ -186,7 +184,6 @@ router.post('/daily/:id/submit', verifyToken, async (req, res) => {
 
         if (bonusXP > 0) {
             xpEarned += bonusXP;
-            // Güncelle
             const me = tournament.participants.find(
                 p => p.student.toString() === req.user._id.toString()
             );
@@ -209,7 +206,7 @@ router.post('/daily/:id/submit', verifyToken, async (req, res) => {
     }
 });
 
-// GET /api/tournaments/daily/:id/leaderboard — Turnuva sıralaması
+// GET /api/tournaments/daily/:id/leaderboard
 router.get('/daily/:id/leaderboard', verifyToken, async (req, res) => {
     try {
         const tournament = await DailyTournament.findById(req.params.id)
@@ -233,8 +230,9 @@ router.get('/daily/:id/leaderboard', verifyToken, async (req, res) => {
 
         res.json({
             title: tournament.title,
-            date: tournament.date,
-            status: tournament.status,
+            startDate: tournament.startDate,
+            endDate: tournament.endDate,
+            status: computeStatus(tournament),
             questionCount: tournament.questionCount,
             leaderboard
         });
@@ -247,9 +245,9 @@ router.get('/daily/:id/leaderboard', verifyToken, async (req, res) => {
 router.get('/daily/history', verifyToken, async (req, res) => {
     try {
         const tournaments = await DailyTournament.find()
-            .sort({ date: -1 })
+            .sort({ startDate: -1, startTime: -1 })
             .limit(30)
-            .select('title date startTime endTime questionCount subject status participants')
+            .select('title type startDate endDate startTime endTime questionCount subject status participants')
             .lean();
 
         const history = tournaments.map(t => {
@@ -260,11 +258,13 @@ router.get('/daily/history', verifyToken, async (req, res) => {
             return {
                 _id: t._id,
                 title: t.title,
-                date: t.date,
+                type: t.type,
+                startDate: t.startDate,
+                endDate: t.endDate,
                 startTime: t.startTime,
                 endTime: t.endTime,
                 questionCount: t.questionCount,
-                status: t.status,
+                status: computeStatus(t),
                 participantCount: t.participants.length,
                 myScore: myP ? myP.score : null,
                 myRank,
@@ -279,18 +279,22 @@ router.get('/daily/history', verifyToken, async (req, res) => {
     }
 });
 
-// POST /api/tournaments/daily — Admin: Yeni turnuva oluştur
+// POST /api/tournaments/daily — Admin: Turnuva oluştur (tam form)
 router.post('/daily', verifyToken, checkRole(['admin']), async (req, res) => {
     try {
-        const { title, date, startTime, endTime, questionCount, subject, difficulty } = req.body;
+        const { title, type, startDate, endDate, startTime, endTime, questionCount, subject, difficulty } = req.body;
+
+        if (!title || !startDate || !startTime || !endTime) {
+            return res.status(400).json({ message: 'Başlık, tarih ve saat zorunludur' });
+        }
+
         const count = questionCount || 10;
 
         // Soru filtresi
         const filter = { active: true };
         if (subject) filter.subject = subject;
-        if (difficulty) filter.difficulty = difficulty;
+        if (difficulty) filter.difficulty = Number(difficulty);
 
-        // Rastgele soru seç
         const questions = await QuizQuestion.aggregate([
             { $match: filter },
             { $sample: { size: count } }
@@ -303,52 +307,15 @@ router.post('/daily', verifyToken, checkRole(['admin']), async (req, res) => {
         }
 
         const tournament = new DailyTournament({
-            title: title || 'Akşam Turnuvası',
-            date: date || new Date().toISOString().split('T')[0],
-            startTime: startTime || '20:00',
-            endTime: endTime || '21:00',
+            title,
+            type: type || 'daily',
+            startDate,
+            endDate: endDate || startDate,
+            startTime,
+            endTime,
             questionCount: count,
             subject: subject || null,
-            difficulty: difficulty || null,
-            questions: questions.map(q => q._id),
-            status: 'scheduled',
-            createdBy: req.user._id
-        });
-
-        await tournament.save();
-        res.status(201).json(tournament);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-// POST /api/tournaments/daily/auto-create — Admin: Bugün için otomatik turnuva
-router.post('/daily/auto-create', verifyToken, checkRole(['admin']), async (req, res) => {
-    try {
-        const today = new Date().toISOString().split('T')[0];
-
-        // Bugün zaten var mı?
-        const existing = await DailyTournament.findOne({ date: today });
-        if (existing) {
-            return res.status(400).json({ message: 'Bugün zaten bir turnuva var', tournament: existing });
-        }
-
-        // 10 karma soru seç
-        const questions = await QuizQuestion.aggregate([
-            { $match: { active: true } },
-            { $sample: { size: 10 } }
-        ]);
-
-        if (questions.length < 10) {
-            return res.status(400).json({ message: `Yeterli soru yok (${questions.length}/10)` });
-        }
-
-        const tournament = new DailyTournament({
-            title: 'Akşam Turnuvası',
-            date: today,
-            startTime: '20:00',
-            endTime: '21:00',
-            questionCount: 10,
+            difficulty: difficulty ? Number(difficulty) : null,
             questions: questions.map(q => q._id),
             status: 'scheduled',
             createdBy: req.user._id
@@ -356,6 +323,21 @@ router.post('/daily/auto-create', verifyToken, checkRole(['admin']), async (req,
 
         await tournament.save();
         res.status(201).json({ message: 'Turnuva oluşturuldu!', tournament });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// DELETE /api/tournaments/daily/:id — Admin: Turnuva sil
+router.delete('/daily/:id', verifyToken, checkRole(['admin']), async (req, res) => {
+    try {
+        const t = await DailyTournament.findById(req.params.id);
+        if (!t) return res.status(404).json({ message: 'Turnuva bulunamadı' });
+        if (t.participants.length > 0) {
+            return res.status(400).json({ message: 'Katılımcısı olan turnuva silinemez' });
+        }
+        await DailyTournament.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Silindi' });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
