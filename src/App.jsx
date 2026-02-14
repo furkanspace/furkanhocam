@@ -19,6 +19,7 @@ import ProfilePage from './components/ProfilePage';
 import QuizBankPage from './components/QuizBankPage';
 import DailyQuizPage from './components/DailyQuizPage';
 import LeaguePage from './components/LeaguePage';
+import SkillTreePage from './components/SkillTreePage';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
@@ -326,6 +327,14 @@ function GameContainer() {
                     {currentPage === 'LEAGUE' && (
                         <LeaguePage
                             key="league"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* SKILL TREE (Beceri Ağacı) */}
+                    {currentPage === 'SKILL_TREE' && (
+                        <SkillTreePage
+                            key="skill-tree"
                             onBack={() => handleNavigate('HOME')}
                         />
                     )}

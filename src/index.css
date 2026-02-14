@@ -5995,3 +5995,643 @@ button:disabled {
         display: none;
     }
 }
+
+/* ========================================
+   SKILL TREE — Duolingo Style
+   ======================================== */
+
+.skill-tree-page {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+/* Header */
+.st-header,
+.st-tree-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.st-header-title,
+.st-tree-header-info {
+    text-align: center;
+}
+
+.st-header-title h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2rem;
+    color: #fff;
+    margin: 8px 0 4px;
+}
+
+.st-header-title p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.st-header-icon {
+    font-size: 2.5rem;
+}
+
+/* Seed Button */
+.st-seed-btn {
+    display: block;
+    margin: 0 auto 24px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Subject Cards */
+.st-subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.st-subject-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+
+.st-subject-card:hover {
+    border-color: var(--sc);
+}
+
+.st-subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--sg);
+}
+
+.st-subject-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.st-subject-card h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    color: #fff;
+    margin: 0 0 6px;
+}
+
+.st-subject-count {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.st-coming-soon {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.st-subject-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    opacity: 0.4;
+}
+
+/* Grade Cards */
+.st-grade-group {
+    margin-bottom: 24px;
+}
+
+.st-grade-group-title {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+}
+
+.st-grades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.st-grade-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    position: relative;
+}
+
+.st-grade-card:hover {
+    border-color: var(--gc);
+}
+
+.st-grade-icon {
+    font-size: 1.8rem;
+}
+
+.st-grade-info {
+    flex: 1;
+}
+
+.st-grade-info h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin: 0 0 2px;
+}
+
+.st-grade-info span {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+/* Circular Progress Ring */
+.st-grade-progress {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.st-progress-ring {
+    width: 44px;
+    height: 44px;
+    transform: rotate(-90deg);
+}
+
+.st-progress-pct {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.st-grade-xp {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 0.7rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Empty State */
+.st-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+/* ===== TREE PATH (Duolingo Style) ===== */
+.st-tree-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-primary);
+    padding: 12px 20px 16px;
+    margin: -20px -20px 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.st-tree-header-info h2 {
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.2rem;
+    margin: 0 0 8px;
+    text-align: center;
+}
+
+.st-tree-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.st-tree-progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.st-tree-progress-text {
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Path Container */
+.st-path-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0 80px;
+    gap: 8px;
+}
+
+/* Unit Banner */
+.st-unit-banner {
+    width: 85%;
+    max-width: 300px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.st-unit-banner::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--uc);
+}
+
+.st-unit-banner.complete {
+    border-color: rgba(0, 255, 136, 0.3);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.st-unit-num {
+    background: var(--uc);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.st-unit-name {
+    flex: 1;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.st-unit-progress {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+.st-unit-star {
+    font-size: 1.1rem;
+}
+
+/* Step Row */
+.st-step-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.3s ease;
+}
+
+/* Connector */
+.st-connector {
+    width: 3px;
+    height: 24px;
+    background: #1f2937;
+    border-radius: 2px;
+    margin-bottom: 2px;
+}
+
+.st-connector.active {
+    background: linear-gradient(to bottom, var(--accent), #3b82f6);
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+}
+
+/* Step Node */
+.step-node {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.step-node .step-icon {
+    font-size: 1.6rem;
+    z-index: 2;
+}
+
+/* Completed */
+.step-node.completed {
+    background: linear-gradient(135deg, #00e676, #00c853);
+    border-color: #00ff88;
+    box-shadow: 0 0 16px rgba(0, 255, 136, 0.35);
+}
+
+/* Available */
+.step-node.available {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border-color: #60a5fa;
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.35);
+    animation: st-node-breathe 2s ease-in-out infinite;
+}
+
+/* Locked */
+.step-node.locked {
+    background: #1a1a2e;
+    border-color: #2d2d44;
+    opacity: 0.55;
+    cursor: default;
+}
+
+.step-node.locked .step-icon {
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+/* Check Mark */
+.step-check-mark {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #00c853;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border: 2px solid var(--bg-primary);
+    z-index: 3;
+}
+
+/* Pulse Ring */
+.step-pulse-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    animation: st-pulse-expand 2s ease-out infinite;
+}
+
+/* Step Label */
+.st-step-label {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-align: center;
+    max-width: 90px;
+    margin-top: 2px;
+}
+
+/* Animations */
+@keyframes st-node-breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 16px rgba(59, 130, 246, 0.35);
+    }
+
+    50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 28px rgba(59, 130, 246, 0.55);
+    }
+}
+
+@keyframes st-pulse-expand {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+/* ===== STEP MODAL ===== */
+.st-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 20px;
+}
+
+.st-modal {
+    background: #1a1a2e;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.st-modal-header {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.st-modal-icon {
+    font-size: 3rem;
+}
+
+.st-modal-body {
+    padding: 20px 24px 30px;
+    text-align: center;
+}
+
+.st-modal-body h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin: 0 0 6px;
+}
+
+.st-modal-unit {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+
+.st-modal-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.st-modal-status.completed {
+    background: rgba(0, 255, 136, 0.15);
+    color: var(--accent);
+}
+
+.st-modal-status.locked {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+}
+
+.st-modal-xp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 16px;
+    font-size: 1rem;
+}
+
+.st-modal-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+}
+
+/* ===== CELEBRATION ===== */
+.st-celebration {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.st-celebration-icon {
+    font-size: 4rem;
+}
+
+.st-celebration-xp {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+}
+
+/* Loading */
+.st-loading {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    color: var(--text-secondary);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .skill-tree-page {
+        padding: 12px;
+    }
+
+    .st-header-title h1 {
+        font-size: 1.5rem;
+    }
+
+    .st-subjects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .st-grades-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .step-node {
+        width: 54px;
+        height: 54px;
+    }
+
+    .step-node .step-icon {
+        font-size: 1.3rem;
+    }
+
+    .st-unit-banner {
+        width: 92%;
+    }
+
+    .st-modal {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .st-grades-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .step-node {
+        width: 48px;
+        height: 48px;
+    }
+}
