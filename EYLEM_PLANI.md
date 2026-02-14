@@ -25,7 +25,8 @@
 - [x] ~~Rozet/Başarı sistemi (20 rozet + birleşik XP)~~ ✅
 
 ### 🟡 Kısa Vadeli (Q1-Q2)
-- [ ] Beceri ağaçları (Skill Trees) — RPG tarzı ders ilerleme haritası
+- [x] ~~Beceri ağaçları (Skill Trees) — Duolingo tarzı ilerleme haritası (10 ünite × 7 adım/sınıf)~~ ✅
+- [ ] Beceri ağacı içerik yönetimi — Her adıma soru, kelime, ses, alıştırma ekleme (Admin paneli + StepContent modeli)
 - [ ] XP/seviye sistemi genişletme (quiz dışı XP kaynakları)
 - [x] ~~Turnuva sekmesini lig sistemiyle güçlendirme (Bronz/Gümüş/Altın/Platin/Elmas)~~ ✅
 - [ ] Günlük turnuvalar (10-15 soru, belirli saatte açılan yarışmalar)
@@ -104,6 +105,7 @@ Deploy:   Docker + DigitalOcean
 | **Kütüphane** | Video ve PDF arşivi, filtrelenebilir dersler | ✅ |
 | **Arena** | Turnuvalar, lig sıralamaları | ✅ |
 | **Quiz** | Günlük quiz, soru bankası | ✅ |
+| **Beceri Ağacı** | Duolingo tarzı ilerleme yolu, 7 adımlı ünite sistemi | ✅ |
 | **Profil** | Rozetler, yetenek ağacı, kişisel istatistikler | ✅ |
 | **Eğitim** | Ders takibi, öğretmene soru sorma | ✅ |
 | **Atölye** | Kelime oyunları, interaktif egzersizler | 📋 Planlanan |

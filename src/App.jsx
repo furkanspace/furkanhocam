@@ -20,6 +20,7 @@ import QuizBankPage from './components/QuizBankPage';
 import DailyQuizPage from './components/DailyQuizPage';
 import LeaguePage from './components/LeaguePage';
 import SkillTreePage from './components/SkillTreePage';
+import DailyTournamentPage from './components/DailyTournamentPage';
 
 import { getTournaments, createTournament, updateTournament, deleteTournament } from './api';
 
@@ -335,6 +336,14 @@ function GameContainer() {
                     {currentPage === 'SKILL_TREE' && (
                         <SkillTreePage
                             key="skill-tree"
+                            onBack={() => handleNavigate('HOME')}
+                        />
+                    )}
+
+                    {/* DAILY TOURNAMENT (Günlük Turnuva) */}
+                    {currentPage === 'DAILY_TOURNAMENT' && (
+                        <DailyTournamentPage
+                            key="daily-tournament"
                             onBack={() => handleNavigate('HOME')}
                         />
                     )}

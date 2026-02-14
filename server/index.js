@@ -35,6 +35,7 @@ app.use('/api/quiz', require('./routes/quizQuestions'));
 app.use('/api/badges', require('./routes/badges'));
 app.use('/api/leagues', require('./routes/leagues'));
 app.use('/api/skill-trees', require('./routes/skillTrees'));
+app.use('/api/tournaments', require('./routes/dailyTournaments'));
 
 // Handle SPA (React) routing - Return index.html for any other request
 app.get('*', (req, res) => {
